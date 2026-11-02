@@ -1,0 +1,8 @@
+.gradle/
+build/
+.kotlin/
+# The dev server's world, configs and downloaded jars.
+dev/run/
+.idea/
+*.iml
+out/

@@ -1,0 +1,48 @@
+# Release-please keeps one open release PR per plugin with changes. Merging it tags `<plugin>-v<version>`
+# and creates the GitHub release; the publish job then builds that plugin only, attaches its jar to the
+# release and uploads it to Modrinth and Hangar where the plugin is configured for them.
+name: release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      paths: ${{ steps.release.outputs.paths_released }}
+    steps:
+      - uses: googleapis/release-please-action@v5
+        id: release
+
+  publish:
+    needs: release-please
+    if: needs.release-please.outputs.paths != '' && needs.release-please.outputs.paths != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path: ${{ fromJSON(needs.release-please.outputs.paths) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build and publish
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+        run: ./gradlew ":$(basename '${{ matrix.path }}'):publishRelease"
+      - name: Attach jar to the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          name="$(basename '${{ matrix.path }}')"
+          version="$(cat '${{ matrix.path }}/version.txt')"
+          gh release upload "$name-v$version" "${{ matrix.path }}/build/libs/$name-$version.jar"

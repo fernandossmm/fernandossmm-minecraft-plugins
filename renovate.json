@@ -1,0 +1,11 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "packageRules": [
+    {
+      "description": "Paper builds within the targeted Minecraft version only; moving to a new Minecraft version is a deliberate change of `minecraft` and `paper-api` together.",
+      "matchPackageNames": ["io.papermc.paper:paper-api"],
+      "allowedVersions": "/^26\\.2\\./"
+    }
+  ]
+}
