@@ -27,3 +27,6 @@ file("plugins").listFiles()
     }
 
 include("dev")
+// A test-only plugin for the end-to-end suite in dev/e2e; never published.
+include("e2e-harness")
+project(":e2e-harness").projectDir = file("dev/e2e/harness")

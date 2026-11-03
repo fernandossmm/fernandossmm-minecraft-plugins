@@ -1,0 +1,14 @@
+name: MultiplayerDragonRebirth
+version: "${version}"
+main: me.fernandossm.multiplayerdragonrebirth.MultiplayerDragonRebirth
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"
+permissions:
+  multiplayerdragonrebirth.admin:
+    description: Use /mdr to inspect dragon fights, change who counts as a newcomer and force a summon.
+    default: op
+  multiplayerdragonrebirth.exempt:
+    description: Never summons a dragon by entering the End, and never makes a kill first-time. For staff.
+    default: false

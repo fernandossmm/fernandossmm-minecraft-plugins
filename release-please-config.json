@@ -4,8 +4,8 @@
   "include-component-in-tag": true,
   "bump-minor-pre-major": true,
   "packages": {
-    "plugins/dragon-rebirth": {
-      "component": "dragon-rebirth"
+    "plugins/multiplayer-dragon-rebirth": {
+      "component": "multiplayer-dragon-rebirth"
     }
   }
 }

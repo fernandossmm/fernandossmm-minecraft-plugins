@@ -1,20 +1,41 @@
-// A local Paper server with every plugin in this repository and their third-party dependencies:
-//   ./gradlew runServer
-// The server lives in dev/run/ (ignored by git); delete it to start from a fresh world.
+// Local Paper servers with every plugin in this repository:
+//   ./gradlew runServer      for trying things by hand; lives in dev/run/
+//   ./gradlew runE2eServer   for the end-to-end suite in dev/e2e (started by it, not by hand); lives in dev/e2e/run/
+// Both directories are ignored by git; delete them to start from a fresh world.
+
+import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     alias(libs.plugins.run.paper)
 }
 
-val pluginProjects = rootProject.subprojects.filter { it != project }
+val pluginProjects = rootProject.subprojects.filter { it.projectDir.parentFile.name == "plugins" }
 pluginProjects.forEach { evaluationDependsOn(it.path) }
+evaluationDependsOn(":e2e-harness")
+
+fun RunServer.withOurPlugins() {
+    minecraftVersion(libs.versions.minecraft.get())
+    pluginProjects.forEach { pluginJars(it.tasks.named<Jar>("jar").flatMap { jar -> jar.archiveFile }) }
+    jvmArgs("-Xms1G", "-Xmx2G", "-Dcom.mojang.eula.agree=true")
+}
 
 tasks.runServer {
-    minecraftVersion(libs.versions.minecraft.get())
+    withOurPlugins()
     runDirectory(layout.projectDirectory.dir("run").asFile)
-    pluginProjects.forEach { pluginJars(it.tasks.named<Jar>("jar").flatMap { jar -> jar.archiveFile }) }
     downloadPlugins {
         // Third-party plugins that ours depend on are added here, pinned, together with the plugin that needs them.
     }
-    jvmArgs("-Xms1G", "-Xmx2G", "-Dcom.mojang.eula.agree=true")
+}
+
+tasks.register<RunServer>("runE2eServer") {
+    group = "verification"
+    description = "Starts the server the end-to-end suite drives (dev/e2e/run.mjs starts it)."
+    withOurPlugins()
+    runDirectory(layout.projectDirectory.dir("e2e/run").asFile)
+    pluginJars(project(":e2e-harness").tasks.named<Jar>("jar").flatMap { it.archiveFile })
+    downloadPlugins {
+        // The test bots speak the protocol of the previous Minecraft version; these translate it.
+        url("https://cdn.modrinth.com/data/P1OZGk5p/versions/Fkfcr89K/ViaVersion-5.12.2.jar")
+        url("https://cdn.modrinth.com/data/NpvuJQoq/versions/WFO37e8T/ViaBackwards-5.12.2.jar")
+    }
 }

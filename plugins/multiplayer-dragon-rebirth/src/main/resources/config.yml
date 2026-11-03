@@ -1,0 +1,37 @@
+# Multiplayer Dragon Rebirth
+#
+# A newcomer is a player who has never taken part in a dragon kill. When a newcomer is in the End and no
+# dragon is alive or being summoned, a dragon is summoned for them. A kill in which at least one newcomer
+# damaged the dragon is a first-time kill: the dragon drops its egg and 12,000 experience, as the very
+# first dragon does. Everyone who damaged the dragon then stops being a newcomer.
+
+# End worlds the plugin manages, by name. Empty: every End world that has a dragon fight.
+worlds: []
+
+# Seconds between a newcomer arriving in the End and the dragon being summoned.
+countdown-seconds: 10
+
+# Also start the countdown when a newcomer logs in while already in the End.
+trigger-on-join: true
+
+# Who has already fought the dragon when the plugin first runs on a server (when it has no data file yet).
+#   MARK_EXISTING  every player who has ever joined the server; only players new to the server are newcomers
+#   NONE           nobody; every player is a newcomer
+# Admins can change this afterwards with /mdr mark-existing, /mdr mark, /mdr reset and /mdr reset-all.
+first-run: MARK_EXISTING
+
+# Players who have the "Free the End" advancement never count as newcomers. A last resort for servers that
+# started with first-run: NONE, since vanilla only grants the advancement to the player who lands the kill.
+free-the-end-counts-as-done: false
+
+# false: a first-time kill gives one egg.
+# true:  it gives one egg per newcomer who damaged the dragon. The extra eggs are stacked on top of the
+#        first, on the exit portal.
+egg-per-newcomer: false
+
+# Broadcast to the whole server, in MiniMessage format. An empty message is not sent.
+messages:
+  # Placeholders: <newcomers>, <seconds>, <world>
+  countdown: "<light_purple>A dragon rises for <newcomers> in <seconds> seconds."
+  # Placeholders: <newcomers>, <world>
+  first-time-kill: "<gold>The dragon has fallen! Its egg and power await."

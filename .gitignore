@@ -1,8 +1,12 @@
 .gradle/
 build/
 .kotlin/
-# The dev server's world, configs and downloaded jars.
+# The dev servers' worlds, configs and downloaded jars, and the end-to-end suite's output.
 dev/run/
+dev/e2e/run/
+dev/e2e/node_modules/
+dev/e2e/server-*.log
+dev/e2e/e2e-output.log
 .idea/
 *.iml
 out/

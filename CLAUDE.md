@@ -5,5 +5,5 @@
 - Every dependency version is in `gradle/libs.versions.toml`. `minecraft` there is the single source of the targeted version (api-version, Modrinth/Hangar game versions, dev server).
 - Commit messages are Conventional Commits; release-please derives versions and changelogs from them. Never edit `version.txt`, `CHANGELOG.md` or `.release-please-manifest.json` by hand except when adding a plugin.
 - Java 25, Paper API only (no NMS). Main plugin classes are not `final` (MockBukkit subclasses them).
-- Verify with `./gradlew build`; check behaviour on the dev server with `./gradlew runServer`.
+- Verify with `./gradlew build`; check behaviour on the dev server with `./gradlew runServer`. Behaviour MockBukkit cannot simulate (dragon fights, experience, eggs) is covered by the end-to-end suite in `dev/e2e` (`npm test`), which must pass before a release.
 - Do not commit or push; stage changes for review.

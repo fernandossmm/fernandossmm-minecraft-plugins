@@ -1,7 +1,0 @@
-name: DragonRebirth
-version: "${version}"
-main: me.fernandossm.dragonrebirth.DragonRebirth
-api-version: "${apiVersion}"
-description: "${description}"
-authors: [fernandossmm]
-website: "${website}"

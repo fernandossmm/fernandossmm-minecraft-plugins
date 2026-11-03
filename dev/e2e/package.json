@@ -1,0 +1,15 @@
+{
+  "name": "e2e",
+  "private": true,
+  "description": "End-to-end suite: a real Paper server, bots as players, the harness plugin for assertions",
+  "type": "module",
+  "scripts": {
+    "test": "node run.mjs"
+  },
+  "dependencies": {
+    "mineflayer": "4.39.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

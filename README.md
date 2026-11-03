@@ -4,7 +4,7 @@ Small Paper plugins that fill gaps no maintained plugin covers. Each one is inde
 
 | Plugin | What it does | Status |
 |---|---|---|
-| [dragon-rebirth](plugins/dragon-rebirth) | Respawns the Ender Dragon for every player who reaches the End for the first time, with its egg and full experience | in development |
+| [Multiplayer Dragon Rebirth](plugins/multiplayer-dragon-rebirth) | Gives every player their own Ender Dragon fight, with its egg and full experience | not released yet |
 
 Planned: `city-shulkers` (shulkers return to End cities), `bluemap-griefprevention` (GriefPrevention claims on BlueMap), `bluemap-banner-markers` (named banners become BlueMap markers).
 
@@ -23,6 +23,15 @@ Needs JDK 25 (Gradle downloads one if none is installed).
 
 `runServer` accepts Mojang's EULA for that local server through Paper's command-line flag. Delete `dev/run/` to start from a fresh world.
 
+## Testing
+
+- `./gradlew build` runs the unit tests and the MockBukkit tests of every plugin.
+- `dev/e2e` is an end-to-end suite against a real Paper server: bots join as players (mineflayer, through ViaVersion and ViaBackwards, since bots speak the previous Minecraft version), and a test-only harness plugin reports the server's state over RCON. It needs Node 20 or later and takes about ten minutes:
+
+  ```sh
+  cd dev/e2e && npm ci && npm test
+  ```
+
 ## Layout
 
 ```
@@ -30,6 +39,7 @@ build-logic/              conventions every plugin applies (minecraft-plugin): t
 gradle/libs.versions.toml one version of every dependency, shared by all plugins
 plugins/<name>/           one plugin: build.gradle.kts, version.txt, gradle.properties, src/, README.md, CHANGELOG.md
 dev/                      the runServer setup
+dev/e2e/                  end-to-end suite (run.mjs) and its harness plugin
 ```
 
 ## Releasing
@@ -41,7 +51,7 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`fe
 
 ## Adding a plugin
 
-1. Copy `plugins/dragon-rebirth` to `plugins/<name>` and replace its sources, `description`, `paper-plugin.yml` and README. Set `version.txt` to `0.0.0`.
+1. Copy `plugins/multiplayer-dragon-rebirth` to `plugins/<name>` and replace its sources, `description`, `paper-plugin.yml` and README. Set `version.txt` to `0.0.0`.
 2. Add `plugins/<name>` to `release-please-config.json` (`"component": "<name>"`) and to `.release-please-manifest.json` (`"0.0.0"`).
 3. Add any third-party plugin it depends on to `dev/build.gradle.kts` (`downloadPlugins`) and, if compiled against, to the version catalog.
 

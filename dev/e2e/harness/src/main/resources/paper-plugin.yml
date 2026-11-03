@@ -1,0 +1,11 @@
+name: E2eHarness
+version: "0"
+main: me.fernandossm.e2eharness.E2eHarness
+api-version: "${apiVersion}"
+description: Test-only commands for the end-to-end suite. Never install on a real server.
+dependencies:
+  server:
+    MultiplayerDragonRebirth:
+      load: BEFORE
+      required: true
+      join-classpath: true
