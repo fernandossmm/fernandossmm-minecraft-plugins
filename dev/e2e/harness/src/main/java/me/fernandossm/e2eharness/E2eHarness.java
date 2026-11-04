@@ -3,10 +3,15 @@ package me.fernandossm.e2eharness;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import me.fernandossm.multiplayerdragonrebirth.api.DragonSummonEvent;
@@ -58,6 +63,19 @@ public final class E2eHarness extends JavaPlugin implements Listener {
                                         vanish(StringArgumentType.getString(c, "player"), Boolean.parseBoolean(StringArgumentType.getString(c, "on"))))))))
                         .build(),
                 "End-to-end test harness"));
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(
+                Commands.literal("ecsrtest")
+                        .then(Commands.literal("city").then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("z", IntegerArgumentType.integer()).executes(c -> toFile(c.getSource(), "e2e-city.json",
+                                        CityProbe.city(end(), IntegerArgumentType.getInteger(c, "x"), IntegerArgumentType.getInteger(c, "z")))))))
+                        .then(Commands.literal("claim").then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("z", IntegerArgumentType.integer()).executes(c -> reply(c.getSource(),
+                                        Claims.claim(end(), IntegerArgumentType.getInteger(c, "x"), IntegerArgumentType.getInteger(c, "z")))))))
+                        .then(Commands.literal("unclaim").executes(c -> reply(c.getSource(), Claims.unclaimAll())))
+                        .then(Commands.literal("whereis").then(Commands.argument("player", StringArgumentType.word())
+                                .executes(c -> reply(c.getSource(), CityProbe.whereIs(StringArgumentType.getString(c, "player"))))))
+                        .build(),
+                "End-to-end test harness: End cities"));
     }
 
     @EventHandler
@@ -219,6 +237,17 @@ public final class E2eHarness extends JavaPlugin implements Listener {
         o.addProperty("y", l.getY());
         o.addProperty("z", l.getZ());
         return o;
+    }
+
+    /** For replies too long for RCON (4,096 bytes): written to a file in the server directory instead. */
+    private static int toFile(CommandSourceStack source, String name, JsonObject json) {
+        try {
+            Files.writeString(Path.of(name), json.toString(), StandardCharsets.UTF_8);
+            source.getSender().sendPlainMessage("written " + name);
+        } catch (IOException e) {
+            source.getSender().sendPlainMessage("cannot write " + name + ": " + e.getMessage());
+        }
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int reply(CommandSourceStack source, JsonObject json) {

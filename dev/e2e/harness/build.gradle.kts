@@ -11,6 +11,8 @@ java {
 dependencies {
     compileOnly(libs.paper.api)
     compileOnly(project(":multiplayer-dragon-rebirth"))
+    compileOnly(project(":end-city-shulker-respawn"))
+    compileOnly(libs.griefprevention) { isTransitive = false }
 }
 
 tasks.processResources {

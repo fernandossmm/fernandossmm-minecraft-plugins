@@ -23,7 +23,8 @@ tasks.runServer {
     withOurPlugins()
     runDirectory(layout.projectDirectory.dir("run").asFile)
     downloadPlugins {
-        // Third-party plugins that ours depend on are added here, pinned, together with the plugin that needs them.
+        // Third-party plugins that ours integrate with, pinned to the version in gradle/libs.versions.toml.
+        url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7, for end-city-shulker-respawn
     }
 }
 
@@ -37,5 +38,6 @@ tasks.register<RunServer>("runE2eServer") {
         // The test bots speak the protocol of the previous Minecraft version; these translate it.
         url("https://cdn.modrinth.com/data/P1OZGk5p/versions/Fkfcr89K/ViaVersion-5.12.2.jar")
         url("https://cdn.modrinth.com/data/NpvuJQoq/versions/WFO37e8T/ViaBackwards-5.12.2.jar")
+        url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7
     }
 }

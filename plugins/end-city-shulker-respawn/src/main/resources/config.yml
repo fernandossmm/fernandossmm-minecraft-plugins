@@ -1,0 +1,17 @@
+# End City Shulker Respawn
+#
+# The first time each chunk of an End city loads, the plugin records the city's shulkers there: where each
+# one sits and which block face it is stuck to. When one of them dies, its spot gets a new shulker once the
+# cooldown has passed, the next time that chunk loads (when players arrive from further away). A city never
+# gets more shulkers than it was generated with; shulkers bred by players belong to no spot.
+
+# End worlds the plugin manages, by name. Empty: every End world.
+worlds: []
+
+# Real time between a shulker's death and its spot being refilled; it keeps counting while the server is
+# stopped. A number followed by s, m, h or d; units can be combined: 30m, 16h, 1d12h.
+cooldown: 16h
+
+# Spots inside a GriefPrevention claim are never refilled, so a player who claims a city to live in it is
+# not attacked by new shulkers. Ignored when GriefPrevention is not installed.
+respect-griefprevention-claims: true

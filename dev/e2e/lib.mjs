@@ -1,0 +1,218 @@
+// Shared by the end-to-end suites: a real Paper server (./gradlew runE2eServer), bots as players (mineflayer,
+// through ViaBackwards), vanilla commands and the harness plugin over RCON, and the checks' bookkeeping.
+
+import { spawn, execSync } from 'node:child_process'
+import { createWriteStream, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import net from 'node:net'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import mineflayer from 'mineflayer'
+
+export const HERE = path.dirname(fileURLToPath(import.meta.url))
+export const ROOT = path.resolve(HERE, '../..')
+export const RUN = path.join(HERE, 'run')
+export const END = 'minecraft:the_end'
+const PORT = 25566
+const RCON_PORT = 25575
+const RCON_PASSWORD = 'e2e'
+const BOT_VERSION = '26.1'
+// By absolute path: Windows may be set not to run programs from the current directory.
+export const GRADLEW = path.join(ROOT, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew')
+
+// ---------------------------------------------------------------------------------------------- checks
+
+export const results = []
+
+export function check (name, ok, detail = '') {
+  results.push({ name, ok })
+  console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${ok || !detail ? '' : `\n      ${detail}`}`)
+}
+
+export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+export async function waitFor (description, probe, timeoutMs = 60_000, intervalMs = 1000) {
+  const deadline = Date.now() + timeoutMs
+  let last
+  while (Date.now() < deadline) {
+    last = await probe()
+    if (last) return last
+    await sleep(intervalMs)
+  }
+  throw new Error(`timed out waiting for ${description}`)
+}
+
+// ---------------------------------------------------------------------------------------------- server
+
+let current
+
+/** The running server: its output so far. */
+export const server = () => current
+
+/** A fresh world in dev/e2e/run/, and each plugin's config.yml as given (plugin folder name → entries). */
+export function prepareRun (configs) {
+  rmSync(RUN, { recursive: true, force: true })
+  mkdirSync(RUN, { recursive: true })
+  writeFileSync(path.join(RUN, 'eula.txt'), 'eula=true\n')
+  writeFileSync(path.join(RUN, 'server.properties'), [
+    'online-mode=false',
+    `server-port=${PORT}`,
+    'enable-rcon=true',
+    `rcon.port=${RCON_PORT}`,
+    `rcon.password=${RCON_PASSWORD}`,
+    'spawn-protection=0',
+    'difficulty=normal',
+    'spawn-monsters=false',
+    'view-distance=6',
+    'simulation-distance=6',
+    'allow-flight=true',
+    'level-seed=e2e',
+    ''
+  ].join('\n'))
+  for (const [plugin, entries] of Object.entries(configs)) writeConfig(plugin, entries)
+}
+
+/** Replaces a plugin's config.yml; keys not given take the plugin's defaults. */
+export function writeConfig (plugin, entries) {
+  const dir = path.join(RUN, 'plugins', plugin)
+  mkdirSync(dir, { recursive: true })
+  writeFileSync(path.join(dir, 'config.yml'), Object.entries(entries).map(([k, v]) => `${k}: ${v}`).join('\n') + '\n')
+}
+
+export async function startServer (label) {
+  const log = createWriteStream(path.join(HERE, `server-${label}.log`))
+  const child = spawn(`"${GRADLEW}"`, ['runE2eServer', '--console=plain'], { cwd: ROOT, shell: true })
+  let output = ''
+  const onData = data => { output += data.toString(); log.write(data) }
+  child.stdout.on('data', onData)
+  child.stderr.on('data', onData)
+  current = { child, output: () => output, log }
+  await waitFor('the server to start', () => /Done \([\d.]+s\)!/.test(output) || child.exitCode !== null, 300_000, 500)
+  if (child.exitCode !== null) throw new Error(`the server exited during startup; see server-${label}.log`)
+  await rcon.connect()
+}
+
+export async function stopServer () {
+  for (const name of [...bots.keys()]) await quit(name)
+  rcon.close()
+  const { child } = current
+  child.stdin.write('stop\n')
+  try {
+    await waitFor('the server to stop', () => child.exitCode !== null, 60_000, 500)
+  } catch {
+    killTree(child)
+  }
+  current.log.end()
+  current = undefined
+}
+
+/** After a failure: drops every bot and kills the server. */
+export function abandon () {
+  for (const bot of bots.values()) bot.end()
+  bots.clear()
+  rcon.close()
+  if (current) killTree(current.child)
+  current = undefined
+}
+
+function killTree (child) {
+  try {
+    if (process.platform === 'win32') execSync(`taskkill /pid ${child.pid} /T /F`, { stdio: 'ignore' })
+    else child.kill('SIGKILL')
+  } catch {}
+}
+
+// ---------------------------------------------------------------------------------------------- rcon
+
+const rcon = {
+  socket: undefined,
+  buffer: Buffer.alloc(0),
+  pending: new Map(),
+  nextId: 1,
+
+  async connect () {
+    // RCON may start listening a moment after the server reports it is done.
+    this.socket = await waitFor('RCON', () => new Promise(resolve => {
+      const s = net.connect(RCON_PORT, '127.0.0.1', () => resolve(s))
+      s.once('error', () => resolve(null))
+    }), 30_000, 500)
+    this.buffer = Buffer.alloc(0)
+    this.socket.on('data', data => this.receive(data))
+    await this.send(3, RCON_PASSWORD)
+  },
+
+  close () {
+    this.socket?.destroy()
+    this.socket = undefined
+  },
+
+  receive (data) {
+    this.buffer = Buffer.concat([this.buffer, data])
+    while (this.buffer.length >= 4) {
+      const length = this.buffer.readInt32LE(0)
+      if (this.buffer.length < 4 + length) return
+      const id = this.buffer.readInt32LE(4)
+      const body = this.buffer.toString('utf8', 12, 4 + length - 2)
+      this.buffer = this.buffer.subarray(4 + length)
+      const resolve = this.pending.get(id)
+      if (resolve) { this.pending.delete(id); resolve(body) }
+    }
+  },
+
+  send (type, body) {
+    const id = this.nextId++
+    const payload = Buffer.from(body, 'utf8')
+    const packet = Buffer.alloc(14 + payload.length)
+    packet.writeInt32LE(10 + payload.length, 0)
+    packet.writeInt32LE(id, 4)
+    packet.writeInt32LE(type, 8)
+    payload.copy(packet, 12)
+    return new Promise(resolve => {
+      this.pending.set(id, resolve)
+      this.socket.write(packet)
+    })
+  }
+}
+
+/** Runs a console command and returns its output. */
+export const command = cmd => rcon.send(2, cmd)
+export const inEnd = cmd => command(`execute in ${END} run ${cmd}`)
+
+// ---------------------------------------------------------------------------------------------- bots
+
+export const bots = new Map()
+
+/** A bot joins; it takes no damage and never gets hungry. */
+export async function join (name) {
+  const bot = mineflayer.createBot({ host: '127.0.0.1', port: PORT, username: name, version: BOT_VERSION, auth: 'offline' })
+  bot.chatLog = []
+  bot.on('messagestr', message => bot.chatLog.push(message))
+  await new Promise((resolve, reject) => {
+    bot.once('spawn', resolve)
+    bot.once('kicked', reason => reject(new Error(`${name} was kicked: ${JSON.stringify(reason)}`)))
+    bot.once('error', reject)
+  })
+  bots.set(name, bot)
+  await command(`effect give ${name} minecraft:resistance infinite 4 true`)
+  await command(`effect give ${name} minecraft:saturation infinite 0 true`)
+  return bot
+}
+
+export async function quit (name) {
+  const bot = bots.get(name)
+  bots.delete(name)
+  await new Promise(resolve => { bot.once('end', resolve); bot.quit() })
+}
+
+export async function chatContains (name, text, timeoutMs = 10_000) {
+  return waitFor(`${name} to read "${text}"`, () => bots.get(name).chatLog.some(m => m.includes(text)), timeoutMs, 250)
+    .then(() => true, () => false)
+}
+
+/** A bot runs a command as a player and returns what it was told in reply. */
+export async function asPlayer (name, cmd) {
+  const bot = bots.get(name)
+  const before = bot.chatLog.length
+  bot.chat(cmd)
+  await sleep(1500)
+  return bot.chatLog.slice(before)
+}

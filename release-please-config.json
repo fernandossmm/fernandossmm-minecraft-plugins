@@ -6,6 +6,12 @@
   "packages": {
     "plugins/multiplayer-dragon-rebirth": {
       "component": "multiplayer-dragon-rebirth"
+    },
+    "plugins/end-city-shulker-respawn": {
+      "component": "end-city-shulker-respawn"
+    },
+    "plugins/shiny-shulkers": {
+      "component": "shiny-shulkers"
     }
   }
 }

@@ -14,6 +14,11 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
+        // Plugins published on Modrinth (GriefPrevention), and nothing else.
+        exclusiveContent {
+            forRepository { maven("https://api.modrinth.com/maven") }
+            filter { includeGroup("maven.modrinth") }
+        }
     }
 }
 

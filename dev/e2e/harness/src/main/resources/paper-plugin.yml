@@ -9,3 +9,11 @@ dependencies:
       load: BEFORE
       required: true
       join-classpath: true
+    EndCityShulkerRespawn:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    GriefPrevention:
+      load: BEFORE
+      required: true
+      join-classpath: true

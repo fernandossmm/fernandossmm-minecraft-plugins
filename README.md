@@ -5,8 +5,10 @@ Small Paper plugins that fill gaps no maintained plugin covers. Each one is inde
 | Plugin | What it does | Status |
 |---|---|---|
 | [Multiplayer Dragon Rebirth](plugins/multiplayer-dragon-rebirth) | Gives every player their own Ender Dragon fight, with its egg and full experience | not released yet |
+| [End City Shulker Respawn](plugins/end-city-shulker-respawn) | Shulkers come back to End cities, on the spots where they were, some time after they die | not released yet |
+| [Shiny Shulkers](plugins/shiny-shulkers) | End city shulkers have a 1 in 50 chance to be generated in a dye colour instead of purple | not released yet |
 
-Planned: `city-shulkers` (shulkers return to End cities), `bluemap-griefprevention` (GriefPrevention claims on BlueMap), `bluemap-banner-markers` (named banners become BlueMap markers).
+Planned: `bluemap-griefprevention` (GriefPrevention claims on BlueMap), `bluemap-banner-markers` (named banners become BlueMap markers).
 
 ## Supported versions
 
@@ -29,7 +31,8 @@ Needs JDK 25 (Gradle downloads one if none is installed).
 - `dev/e2e` is an end-to-end suite against a real Paper server: bots join as players (mineflayer, through ViaVersion and ViaBackwards, since bots speak the previous Minecraft version), and a test-only harness plugin reports the server's state over RCON. It needs Node 20 or later and takes about ten minutes:
 
   ```sh
-  cd dev/e2e && npm ci && npm test
+  cd dev/e2e && npm ci && npm test                     # every plugin's suite
+  npm test -- end-city-shulker-respawn                 # one plugin's suite
   ```
 
 ## Layout

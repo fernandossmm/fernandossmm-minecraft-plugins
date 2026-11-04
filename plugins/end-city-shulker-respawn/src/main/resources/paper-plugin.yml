@@ -1,0 +1,17 @@
+name: EndCityShulkerRespawn
+version: "${version}"
+main: me.fernandossm.endcityshulkerrespawn.EndCityShulkerRespawn
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"
+dependencies:
+  server:
+    GriefPrevention:
+      load: BEFORE
+      required: false
+      join-classpath: true
+permissions:
+  endcityshulkerrespawn.admin:
+    description: Use /ecsr to inspect End cities, refill them and re-learn their shulkers.
+    default: op

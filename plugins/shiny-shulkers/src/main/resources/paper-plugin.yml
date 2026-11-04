@@ -1,0 +1,7 @@
+name: ShinyShulkers
+version: "${version}"
+main: me.fernandossm.shinyshulkers.ShinyShulkers
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"

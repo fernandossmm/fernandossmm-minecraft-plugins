@@ -1,0 +1,15 @@
+# Shiny Shulkers
+#
+# When an End city is generated, each of its shulkers has a small chance to come in a dye colour instead
+# of the usual purple. Only that first, generated spawn is rolled: shulkers from spawn eggs, commands or
+# other plugins are not, and a shulker duplicated by a shulker bullet keeps its parent's colour, as in
+# vanilla. Cities generated before the plugin was installed are left as they are.
+
+# End worlds the plugin manages, by name. Empty: every End world.
+worlds: []
+
+# The chance, as "one in N", that a generated city shulker is shiny.
+one-in: 50
+
+# The colours a shiny shulker can be, each equally likely.
+colors: [white, orange, magenta, light_blue, yellow, lime, pink, gray, light_gray, cyan, purple, blue, brown, green, red, black]
