@@ -76,6 +76,47 @@ public final class E2eHarness extends JavaPlugin implements Listener {
                                 .executes(c -> reply(c.getSource(), CityProbe.whereIs(StringArgumentType.getString(c, "player"))))))
                         .build(),
                 "End-to-end test harness: End cities"));
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(
+                Commands.literal("gptest")
+                        .then(Commands.literal("claim").then(word("world").then(word("owner")
+                                .then(integer("x1").then(integer("z1").then(integer("x2").then(integer("z2").executes(c -> reply(c.getSource(),
+                                        GpOps.claim(str(c, "world"), str(c, "owner"), num(c, "x1"), num(c, "z1"), num(c, "x2"), num(c, "z2")))))))))))
+                        .then(Commands.literal("resize").then(integer("id")
+                                .then(integer("x1").then(integer("z1").then(integer("x2").then(integer("z2").executes(c -> reply(c.getSource(),
+                                        GpOps.resize(num(c, "id"), num(c, "x1"), num(c, "z1"), num(c, "x2"), num(c, "z2"))))))))))
+                        .then(Commands.literal("transfer").then(integer("id").then(word("owner")
+                                .executes(c -> reply(c.getSource(), GpOps.transfer(num(c, "id"), str(c, "owner")))))))
+                        .then(Commands.literal("delete").then(integer("id")
+                                .executes(c -> reply(c.getSource(), GpOps.delete(num(c, "id"))))))
+                        .then(Commands.literal("locator").then(word("player")
+                                .executes(c -> reply(c.getSource(), GpOps.locatorColor(str(c, "player"))))))
+                        .build(),
+                "End-to-end test harness: GriefPrevention claims"));
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(
+                Commands.literal("skintest").then(word("player").executes(c -> {
+                    org.bukkit.entity.Player player = getServer().getPlayerExact(str(c, "player"));
+                    JsonObject o = new JsonObject();
+                    if (player != null) {
+                        var profile = player.getPlayerProfile();
+                        java.net.URL skin = profile.getTextures().getSkin();
+                        o.addProperty("skin", skin == null ? null : skin.toString());
+                        o.addProperty("properties", profile.getProperties().stream().map(p -> p.getName()).toList().toString());
+                    }
+                    return reply(c.getSource(), o);
+                })).build(),
+                "End-to-end test harness: skins"));
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(
+                Commands.literal("bbmtest")
+                        .then(Commands.literal("displays").then(word("world").then(integer("x").then(integer("y").then(integer("z")
+                                .then(integer("r").executes(c -> reply(c.getSource(), BbmOps.displays(str(c, "world"),
+                                        num(c, "x"), num(c, "y"), num(c, "z"), num(c, "r"))))))))))
+                        .then(Commands.literal("pixel").then(integer("x").then(integer("y")
+                                .then(Commands.argument("path", StringArgumentType.greedyString())
+                                        .executes(c -> reply(c.getSource(), BbmOps.pixel(str(c, "path"), num(c, "x"), num(c, "y"))))))))
+                        .then(Commands.literal("skin").then(word("player").then(integer("x").then(integer("y")
+                                .executes(c -> reply(c.getSource(), BbmOps.skin(str(c, "player"), num(c, "x"), num(c, "y"))))))))
+                        .build(),
+                "End-to-end test harness: banner waypoints"));
     }
 
     @EventHandler
@@ -237,6 +278,22 @@ public final class E2eHarness extends JavaPlugin implements Listener {
         o.addProperty("y", l.getY());
         o.addProperty("z", l.getZ());
         return o;
+    }
+
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> word(String name) {
+        return Commands.argument(name, StringArgumentType.word());
+    }
+
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, Integer> integer(String name) {
+        return Commands.argument(name, IntegerArgumentType.integer());
+    }
+
+    private static String str(com.mojang.brigadier.context.CommandContext<CommandSourceStack> c, String name) {
+        return StringArgumentType.getString(c, name);
+    }
+
+    private static int num(com.mojang.brigadier.context.CommandContext<CommandSourceStack> c, String name) {
+        return IntegerArgumentType.getInteger(c, name);
     }
 
     /** For replies too long for RCON (4,096 bytes): written to a file in the server directory instead. */

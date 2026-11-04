@@ -1,0 +1,21 @@
+name: BlueMapGriefPrevention
+version: "${version}"
+main: me.fernandossm.bluemapgriefprevention.BlueMapGriefPrevention
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"
+dependencies:
+  server:
+    GriefPrevention:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    BlueMap:
+      load: BEFORE
+      required: true
+      join-classpath: true
+permissions:
+  bluemapgriefprevention.admin:
+    description: Use /bmgp to redraw the claims or reload the config.
+    default: op

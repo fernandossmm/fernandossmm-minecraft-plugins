@@ -12,6 +12,12 @@
     },
     "plugins/shiny-shulkers": {
       "component": "shiny-shulkers"
+    },
+    "plugins/bluemap-griefprevention": {
+      "component": "bluemap-griefprevention"
+    },
+    "plugins/bluemap-banner-markers": {
+      "component": "bluemap-banner-markers"
     }
   }
 }

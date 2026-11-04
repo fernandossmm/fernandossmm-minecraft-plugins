@@ -19,6 +19,11 @@ dependencyResolutionManagement {
             forRepository { maven("https://api.modrinth.com/maven") }
             filter { includeGroup("maven.modrinth") }
         }
+        // BlueMap's API, and nothing else.
+        exclusiveContent {
+            forRepository { maven("https://repo.bluecolored.de/releases") }
+            filter { includeGroup("de.bluecolored") }
+        }
     }
 }
 

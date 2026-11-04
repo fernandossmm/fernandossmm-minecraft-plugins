@@ -10,6 +10,7 @@ minotaur = "2.10.0"
 hangar-publish = "0.1.4"
 run-paper = "3.1.0"
 griefprevention = "16.18.7"
+bluemap-api = "2.8.2"
 
 [libraries]
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
@@ -19,6 +20,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 mockbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v26.2", version.ref = "mockbukkit" }
 # Third-party plugins ours integrate with; compiled against, never bundled.
 griefprevention = { module = "maven.modrinth:griefprevention", version.ref = "griefprevention" }
+bluemap-api = { module = "de.bluecolored:bluemap-api", version.ref = "bluemap-api" }
 
 # Gradle plugins used by build-logic, by their marker coordinates.
 minotaur-gradle = { module = "com.modrinth.minotaur:com.modrinth.minotaur.gradle.plugin", version.ref = "minotaur" }

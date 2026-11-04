@@ -7,8 +7,8 @@ Small Paper plugins that fill gaps no maintained plugin covers. Each one is inde
 | [Multiplayer Dragon Rebirth](plugins/multiplayer-dragon-rebirth) | Gives every player their own Ender Dragon fight, with its egg and full experience | not released yet |
 | [End City Shulker Respawn](plugins/end-city-shulker-respawn) | Shulkers come back to End cities, on the spots where they were, some time after they die | not released yet |
 | [Shiny Shulkers](plugins/shiny-shulkers) | End city shulkers have a 1 in 50 chance to be generated in a dye colour instead of purple | not released yet |
-
-Planned: `bluemap-griefprevention` (GriefPrevention claims on BlueMap), `bluemap-banner-markers` (named banners become BlueMap markers).
+| [BlueMap GriefPrevention](plugins/bluemap-griefprevention) | GriefPrevention claims on BlueMap, one shape per area, in each owner's locator bar colour | not released yet |
+| [BlueMap Banner Markers](plugins/bluemap-banner-markers) | A name tag on a banner makes a waypoint: the banner itself on BlueMap, its name floating over it | not released yet |
 
 ## Supported versions
 

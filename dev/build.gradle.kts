@@ -24,7 +24,9 @@ tasks.runServer {
     runDirectory(layout.projectDirectory.dir("run").asFile)
     downloadPlugins {
         // Third-party plugins that ours integrate with, pinned to the version in gradle/libs.versions.toml.
-        url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7, for end-city-shulker-respawn
+        url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7
+        url("https://cdn.modrinth.com/data/swbUV1cr/versions/uHQIrUdf/bluemap-5.29-paper.jar") // for bluemap-griefprevention
+        url("https://cdn.modrinth.com/data/TsLS8Py5/versions/ziIzW16f/SkinsRestorer.jar") // 15.12.6, for bluemap-banner-markers
     }
 }
 
@@ -39,5 +41,7 @@ tasks.register<RunServer>("runE2eServer") {
         url("https://cdn.modrinth.com/data/P1OZGk5p/versions/Fkfcr89K/ViaVersion-5.12.2.jar")
         url("https://cdn.modrinth.com/data/NpvuJQoq/versions/WFO37e8T/ViaBackwards-5.12.2.jar")
         url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7
+        url("https://cdn.modrinth.com/data/swbUV1cr/versions/uHQIrUdf/bluemap-5.29-paper.jar") // 5.29
+        url("https://cdn.modrinth.com/data/TsLS8Py5/versions/ziIzW16f/SkinsRestorer.jar") // 15.12.6, offline-mode skins
     }
 }

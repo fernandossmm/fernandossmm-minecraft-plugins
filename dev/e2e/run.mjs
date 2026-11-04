@@ -10,11 +10,15 @@ import { GRADLEW, ROOT, abandon, results } from './lib.mjs'
 import * as dragon from './multiplayer-dragon-rebirth.mjs'
 import * as shulkers from './end-city-shulker-respawn.mjs'
 import * as shiny from './shiny-shulkers.mjs'
+import * as claims from './bluemap-griefprevention.mjs'
+import * as banners from './bluemap-banner-markers.mjs'
 
 const suites = {
   'multiplayer-dragon-rebirth': dragon,
   'end-city-shulker-respawn': shulkers,
-  'shiny-shulkers': shiny
+  'shiny-shulkers': shiny,
+  'bluemap-griefprevention': claims,
+  'bluemap-banner-markers': banners
 }
 
 const requested = process.argv.slice(2)

@@ -1,0 +1,17 @@
+# BlueMap Banner Markers
+#
+# Right-click a placed banner with a name tag (named in an anvil) and the banner becomes a waypoint: the
+# tag is used up, the name floats over the banner, and BlueMap shows the banner itself where it stands.
+# Hovering it on the map shows the name; clicking it shows who placed it, with their face. Breaking the
+# banner removes the waypoint. Only the player who named a banner can rename it.
+
+# Worlds where banners can become waypoints, by name. Empty: every world.
+worlds: []
+
+# How many waypoints each player can have. Players with bluemapbannermarkers.unlimited have no limit.
+max-per-player: 5
+
+# The layer in BlueMap's marker menu.
+layer:
+  label: "Waypoints"
+  hidden-by-default: false

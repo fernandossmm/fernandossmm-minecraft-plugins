@@ -1,0 +1,27 @@
+name: BlueMapBannerMarkers
+version: "${version}"
+main: me.fernandossm.bluemapbannermarkers.BlueMapBannerMarkers
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"
+dependencies:
+  server:
+    BlueMap:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    GriefPrevention:
+      load: BEFORE
+      required: false
+      join-classpath: true
+permissions:
+  bluemapbannermarkers.use:
+    description: Turn banners into waypoints with a name tag.
+    default: true
+  bluemapbannermarkers.unlimited:
+    description: No limit on how many waypoints this player has.
+    default: false
+  bluemapbannermarkers.admin:
+    description: Use /bbm to list, delete and enlarge waypoints, and reload the config.
+    default: op
