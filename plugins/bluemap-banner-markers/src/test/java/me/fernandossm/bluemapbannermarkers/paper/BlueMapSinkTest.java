@@ -225,7 +225,8 @@ class BlueMapSinkTest {
     void thePopupNamesTheOwnerWithTheirFaceOnceThereIsOne() throws Exception {
         sink.show(List.of(home(1)), Settings.DEFAULTS);
         POIMarker before = (POIMarker) overworld.set(0).get("waypoint-7");
-        assertEquals("<b>Home &lt;3</b><br>Placed by Alice", before.getDetail());
+        assertEquals("<div style=\"max-width:16em;overflow-wrap:anywhere\"><b>Home &lt;3</b><br>Placed by Alice</div>",
+                before.getDetail());
 
         face = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
         faceVersion = "abcd1234";

@@ -6,7 +6,7 @@ Name a banner with a name tag and it becomes a **waypoint**: the name floats ove
 - **On the map:** a "Waypoints" layer, shown by default. Hovering a waypoint shows its name; clicking it shows who placed it, with their face.
 - **Renaming:** right-click your own waypoint banner with another named tag. Nobody else can rename it; they are told whose it is.
 - **Removing:** break the banner, by hand, with an explosion, or by breaking what it hangs on.
-- **Limits:** 5 waypoints per player (configurable). A refused name tag is never used up.
+- **Limits:** 5 waypoints per player, and names of up to 24 characters (both configurable). A refused name tag is never used up.
 - With GriefPrevention, a player needs build trust where the banner is.
 
 No client mods; Paper only.
@@ -27,6 +27,7 @@ BlueMap needs `accept-download: true` in `plugins/BlueMap/core.conf`, as it does
 |---|---|---|
 | `worlds` | `[]` | Worlds where banners can become waypoints, by name; empty means every world |
 | `max-per-player` | `5` | How many waypoints each player can have |
+| `max-name-length` | `24` | The longest name a waypoint can have, in characters (at most 50, as in an anvil) |
 | `layer.label` | `Waypoints` | The layer's name in BlueMap's marker menu |
 | `layer.hidden-by-default` | `false` | Whether the layer starts switched off in the browser |
 

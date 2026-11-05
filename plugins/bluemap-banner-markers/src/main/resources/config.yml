@@ -11,6 +11,10 @@ worlds: []
 # How many waypoints each player can have. Players with bluemapbannermarkers.unlimited have no limit.
 max-per-player: 5
 
+# The longest name a waypoint can have, in characters, from 1 to 50 (the most an anvil allows). A longer
+# name tag is refused and kept; waypoints named before a lower limit keep their names.
+max-name-length: 24
+
 # The layer in BlueMap's marker menu.
 layer:
   label: "Waypoints"

@@ -141,13 +141,15 @@ public final class BlueMapSink {
     }
 
     static String detail(Waypoint w, @Nullable String faceUrl) {
-        String text = "<b>" + Names.escape(w.name()) + "</b><br>Placed by " + Names.escape(w.ownerName());
+        // Wrapped, even inside a word, so a long name (or one from before a lower max-name-length) stays narrow.
+        String text = "<div style=\"max-width:16em;overflow-wrap:anywhere\"><b>" + Names.escape(w.name()) + "</b><br>Placed by "
+                + Names.escape(w.ownerName()) + "</div>";
         if (faceUrl == null) {
             return text;
         }
         int size = 8 * Faces.SCALE;
         return "<div style=\"display:flex;align-items:center;gap:8px\"><img src=\"" + Names.escape(faceUrl) + "\" alt=\"\" width=\""
-                + size + "\" height=\"" + size + "\" style=\"image-rendering:pixelated\"><div>" + text + "</div></div>";
+                + size + "\" height=\"" + size + "\" style=\"image-rendering:pixelated\">" + text + "</div>";
     }
 
     private @Nullable String iconAsset(BlueMapMap map, Waypoint w) {

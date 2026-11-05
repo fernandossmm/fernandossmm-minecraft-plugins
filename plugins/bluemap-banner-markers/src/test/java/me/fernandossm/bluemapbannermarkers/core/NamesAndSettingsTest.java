@@ -33,11 +33,16 @@ class NamesAndSettingsTest {
         YamlConfiguration c = new YamlConfiguration();
         c.set("worlds", List.of("world"));
         c.set("max-per-player", -3);
+        c.set("max-name-length", 51);
         c.set("layer.label", "Banners");
         c.set("layer.hidden-by-default", true);
         Settings s = Settings.from(c, Logger.getAnonymousLogger());
         assertEquals(Set.of("world"), s.worlds());
         assertEquals(5, s.maxPerPlayer());
+        assertEquals(24, s.maxNameLength(), "longer than an anvil allows");
+        c.set("max-name-length", 12);
+        assertEquals(12, Settings.from(c, Logger.getAnonymousLogger()).maxNameLength());
+        assertEquals(2, Names.length("😀😀"));
         assertEquals("Banners", s.layerLabel());
         assertTrue(s.hiddenByDefault());
         assertTrue(s.allows("world"));

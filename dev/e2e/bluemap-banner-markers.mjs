@@ -160,6 +160,8 @@ export async function run () {
     chat.includes('This banner is jeb_\'s waypoint') && tagCount(BOB) === 1, `${chat}; ${tagCount(BOB)} tags`)
   chat = await useTag(BOB, 'Claimed', 122, 70, 122)
   check('a banner in a claim needs build trust there', chat.includes('permission to build') && tagCount(BOB) === 1, chat)
+  chat = await useTag(ALICE, 'W'.repeat(25), 103, 50, 103)
+  check('a name longer than max-name-length (24) is refused and the tag kept', chat.includes('at most 24') && tagCount(ALICE) === 1, `${chat}; ${tagCount(ALICE)} tags`)
   ms = await markersWhen('nothing new', () => false, 2000)
   check('none of these touched the map', Object.keys(ms).length === 2 && byLabel(ms, 'Home &lt;3'), JSON.stringify(Object.values(ms).map(m => m.label)))
 

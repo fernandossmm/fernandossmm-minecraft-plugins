@@ -23,6 +23,11 @@ public final class Names {
                 : name.substring(0, name.offsetByCodePoints(0, MAX_LENGTH));
     }
 
+    /** In characters as players count them, not UTF-16 halves. */
+    public static int length(String name) {
+        return name.codePointCount(0, name.length());
+    }
+
     public static String escape(String text) {
         StringBuilder out = new StringBuilder(text.length());
         for (char c : text.toCharArray()) {

@@ -89,6 +89,12 @@ public final class Waypoints {
             player.sendMessage(Component.text("You need permission to build here to make this banner a waypoint.", NamedTextColor.RED));
             return false;
         }
+        int maxLength = settings.get().maxNameLength();
+        if (Names.length(name) > maxLength) {
+            player.sendMessage(Component.text("That name has " + Names.length(name) + " characters; waypoint names can have"
+                    + " at most " + maxLength + ". Rename the tag in an anvil.", NamedTextColor.RED));
+            return false;
+        }
         if (existing != null) {
             Waypoint renamed = existing.withName(name).withOwnerName(player.getName());
             store.update(renamed);
