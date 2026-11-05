@@ -18,7 +18,7 @@ class CityDataTest {
     private static final long NOW = 1_000_000;
 
     private static Spot spot(int x, int z) {
-        return new Spot(x, 70, z, Face.DOWN, Spot.NO_COLOR, Spot.ALIVE);
+        return new Spot(x, 70, z, Face.DOWN, Spot.ALIVE);
     }
 
     @Test
@@ -64,11 +64,11 @@ class CityDataTest {
     @Test
     void settlingMovesASpotAndKeepsItsState() {
         CityData data = CityData.empty();
-        int a = data.addSpot(new Spot(1, 70, 1, Face.DOWN, 3, Spot.ALIVE));
+        int a = data.addSpot(new Spot(1, 70, 1, Face.DOWN, Spot.ALIVE));
         data.died(a, NOW, COOLDOWN);
         assertTrue(data.settled(a, 2, 71, 1, Face.EAST));
         assertFalse(data.settled(a, 2, 71, 1, Face.EAST));
-        assertEquals(new Spot(2, 71, 1, Face.EAST, 3, NOW + COOLDOWN.toMillis()), data.spot(a), "the colour stays too");
+        assertEquals(new Spot(2, 71, 1, Face.EAST, NOW + COOLDOWN.toMillis()), data.spot(a));
     }
 
     @Test

@@ -19,8 +19,8 @@ import org.bukkit.util.BoundingBox;
 
 /**
  * Colours End city shulkers as their city is generated. A chunk generated just now arrives with its city
- * shulkers in it, before any other plugin sees them load (End City Shulker Respawn learns them later, on
- * EntitiesLoadEvent, and so remembers their colour). Vanilla fires no spawn event for them.
+ * shulkers in it; vanilla fires no spawn event for them. With End City Shulker Respawn, the shulkers it
+ * brings back are rolled too ({@link RespawnRolls}).
  */
 // Not final: MockBukkit loads plugins in tests by subclassing them.
 public class ShinyShulkers extends JavaPlugin implements Listener {
@@ -34,6 +34,9 @@ public class ShinyShulkers extends JavaPlugin implements Listener {
         saveDefaultConfig();
         settings = Settings.from(getConfig(), getLogger());
         getServer().getPluginManager().registerEvents(this, this);
+        if (getServer().getPluginManager().getPlugin("EndCityShulkerRespawn") != null) {
+            getServer().getPluginManager().registerEvents(new RespawnRolls(() -> settings, () -> random), this);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

@@ -69,7 +69,7 @@ export async function run () {
   let ms = await markersWhen('Alice\'s claim', m => Object.keys(m).length === 1)
   let alice = withDetail(ms, 'Alice')
   check('a claim becomes a marker', Object.keys(ms).length === 1 && alice.length === 1, JSON.stringify(ms))
-  check('the label (BlueMap's marker list) does not name the owner', alice[0]?.label === 'Claim', alice[0]?.label)
+  check('the label, shown in BlueMap\'s marker list, does not name the owner', alice[0]?.label === 'Claim', alice[0]?.label)
   check('the popup names the owner and the size', alice[0]?.detail === '<b>Claim of Alice</b><br>100 blocks', alice[0]?.detail)
   check('it is a flat shape seen through the terrain', alice[0]?.type === 'shape' && alice[0]?.depthTest === false, JSON.stringify(alice[0]))
   // Made on y 64, as a golden shovel on blocks at y 69 makes it (ExtendIntoGroundDistance 5): drawn on top of those blocks.

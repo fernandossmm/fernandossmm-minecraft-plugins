@@ -5,3 +5,9 @@ api-version: "${apiVersion}"
 description: "${description}"
 authors: [fernandossmm]
 website: "${website}"
+dependencies:
+  server:
+    EndCityShulkerRespawn:
+      load: BEFORE
+      required: false
+      join-classpath: true

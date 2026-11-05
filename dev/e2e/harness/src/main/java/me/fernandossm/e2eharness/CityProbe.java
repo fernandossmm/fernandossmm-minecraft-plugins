@@ -50,7 +50,6 @@ final class CityProbe {
         for (Spot spot : data.spots()) {
             JsonObject s = xyz(spot.x(), spot.y(), spot.z());
             s.addProperty("face", spot.face().name());
-            s.addProperty("color", spot.color() == Spot.NO_COLOR ? "" : org.bukkit.DyeColor.values()[spot.color()].name());
             s.addProperty("alive", spot.alive());
             s.addProperty("dueInMs", spot.alive() ? 0 : spot.dueAt() - now);
             spots.add(s);

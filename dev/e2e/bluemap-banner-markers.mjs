@@ -71,7 +71,7 @@ const BLACK = 0x1D1D21
 
 export async function run () {
   console.log('\n--- naming banners')
-  prepareRun({ BlueMapBannerMarkers: { 'max-per-player': 2 } })
+  prepareRun({ BlueMapBannerMarkers: { 'max-per-player': 2 } }, { skins: true })
   blueMapAcceptsDownload()
   await startServer('bbm-1')
   // The cleared box is dark: without this, creepers spawn in it and blow banners up at random.

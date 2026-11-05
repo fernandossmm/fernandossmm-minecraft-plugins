@@ -2,9 +2,9 @@
 
 End cities are generated once: after the first explorers kill their shulkers, a city stays empty forever, and shulker shells can only come from farms. End City Shulker Respawn brings each city's shulkers back, one by one, some time after they die.
 
-- The first time each chunk of an End city loads, the plugin records the city's shulkers there: where each sits, which block face it is stuck to, and its colour (shulkers coloured by commands or plugins come back in their colour). These are the city's **spots**. Ships are part of their city.
+- The first time each chunk of an End city loads, the plugin records the city's shulkers there: where each sits and which block face it is stuck to. These are the city's **spots**. Ships are part of their city.
 - When one of those shulkers dies, its spot's **cooldown** starts: real time, 16 hours by default, counting while the server is stopped too.
-- The next time that chunk loads after the cooldown (when players arrive from further away), the spot gets a shulker identical to the original. Nothing appears while players keep the chunk loaded, so shulkers never pop in next to anyone.
+- The next time that chunk loads after the cooldown (when players arrive from further away), the spot gets a new shulker, stuck where the original was. It comes back in the default purple; with [Shiny Shulkers](../shiny-shulkers) it gets its own chance to be shiny, so a city's colours change as its shulkers come back. Nothing appears while players keep the chunk loaded, so shulkers never pop in next to anyone.
 - A city never gets more shulkers than it was generated with. Shulkers bred by players (shulker bullets on shulkers) belong to no spot: they are never refilled and never stop a refill. A city shulker moved elsewhere by players keeps its spot taken until it dies.
 
 No client mods; Paper only.
@@ -21,12 +21,13 @@ No client mods; Paper only.
 A due spot is skipped, and tried again on the next load, when:
 
 - its block is no longer air (players built there);
+- nothing solid is left next to it (players mined around it); it comes back once something solid is placed there;
 - a shulker is already sitting on it;
 - the world's difficulty is Peaceful;
 - it lies inside a **GriefPrevention claim** (when GriefPrevention is installed and `respect-griefprevention-claims` is on), so a player who claims a city to live in it is not attacked by new shulkers;
 - another plugin cancels `CityShulkerRespawnEvent`.
 
-A new shulker sticks to the same block face as the one before it. If that block is gone it sticks to another solid neighbour, and if there is none (players mined around the spot) it is left to vanilla, which settles it the way it settled the city's own: on a nearby surface, teleporting if it must. New shulkers never despawn, like the city's own.
+A new shulker sticks to the same block face as the one before it. If that block is gone it sticks to another solid neighbour; if there is none, the spot waits (vanilla would teleport a shulker with nothing to stick to, carrying it away from its spot). New shulkers never despawn, like the city's own.
 
 Vanilla generates a city's shulkers at fixed markers and settles each one on its first tick, which can move it a few blocks. A spot therefore follows its shulker: whenever one of the city's chunks loads, and again a few seconds later, each living city shulker's spot moves to where it sits (within 12 blocks and inside the city, so a shulker players carried away leaves its spot alone).
 
@@ -55,7 +56,7 @@ All under `/ecsr` (alias `/endcityshulkerrespawn`), permission `endcityshulkerre
 
 ## For other plugins
 
-`me.fernandossm.endcityshulkerrespawn.api.CityShulkerRespawnEvent` (cancellable): a shulker is about to come back; gives the location, the city and the spot.
+`me.fernandossm.endcityshulkerrespawn.api.CityShulkerRespawnEvent` (cancellable): a shulker is about to come back; gives the location, the city and the spot, and lets the listener choose its colour.
 
 ## Data
 

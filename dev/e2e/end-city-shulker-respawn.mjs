@@ -55,7 +55,13 @@ async function phaseLearnAndRefill () {
   const claim = JSON.parse(await command(`ecsrtest claim ${claimed.at.x} ${claimed.at.z}`))
   check('a GriefPrevention admin claim is made around a spot', claim.succeeded, JSON.stringify(claim))
   console.log(`      claimed spots: ${claimed.indexes.join(', ')}`)
-  const empty = new Set([0, 1, ...claimed.indexes]) // the spots expected to stay empty
+  const minedOut = loneSpot(s.spots, new Set([0, 1, ...claimed.indexes]))
+  for (const [dx, dy, dz] of Object.values(FACES)) {
+    const at = s.spots[minedOut]
+    await inEnd(`setblock ${at.x + dx} ${at.y + dy} ${at.z + dz} minecraft:air`)
+  }
+  console.log(`      spot ${minedOut} mined out`)
+  const empty = new Set([0, 1, minedOut, ...claimed.indexes]) // the spots expected to stay empty
 
   console.log('\n--- nothing comes back while the city stays loaded')
   await sleep(Math.max(0, killedAt + (COOLDOWN_SECONDS + 3) * 1000 - Date.now()))
@@ -81,13 +87,24 @@ async function phaseLearnAndRefill () {
   check('new shulkers never despawn', refilled.every(sh => sh.persistent), JSON.stringify(refilled))
   check('a spot taken by another shulker stays empty', !s.spots[0].alive, JSON.stringify(s.spots[0]))
   check('a spot blocked by a block stays empty', !s.spots[1].alive, JSON.stringify(s.spots[1]))
+  check('a spot with nothing solid around it stays empty', !s.spots[minedOut].alive, JSON.stringify(s.spots[minedOut]))
   check('spots inside a GriefPrevention claim stay empty', claimed.indexes.every(i => !s.spots[i].alive),
     JSON.stringify(claimed.indexes.map(i => s.spots[i])))
   check('the bred shulker is left alone and owns nothing', s.shulkers.filter(sh => sh.spot < 0).length === 1,
     JSON.stringify(s.shulkers.filter(sh => sh.spot < 0)))
   check('never more shulkers of the city than it had', refilled.length <= learned.spots.length)
   await stopServer()
-  return { learned, empty, claimed }
+  return { learned, empty, claimed, minedOut }
+}
+
+const FACES = { DOWN: [0, -1, 0], UP: [0, 1, 0], NORTH: [0, 0, -1], SOUTH: [0, 0, 1], WEST: [-1, 0, 0], EAST: [1, 0, 0] }
+
+/** A spot to mine out: none of the others within 2 blocks, so no other spot loses what it sticks to. */
+function loneSpot (spots, taken) {
+  const near = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y), Math.abs(a.z - b.z)) <= 2
+  const i = spots.findIndex((spot, i) => !taken.has(i) && spots.every((other, j) => j === i || !near(spot, other)))
+  if (i < 0) throw new Error('no spot away from the others to mine out')
+  return i
 }
 
 /**
@@ -105,7 +122,7 @@ function claimedSpots (spots) {
   throw new Error('no spot to claim away from the others')
 }
 
-async function phaseRestart ({ learned, empty, claimed }) {
+async function phaseRestart ({ learned, empty, claimed, minedOut }) {
   console.log('\n--- after a restart')
   await startServer('ecsr-2')
   await scout() // back where it left: in the city
@@ -131,6 +148,9 @@ async function phaseRestart ({ learned, empty, claimed }) {
   const blocked = learned.spots[1]
   await inEnd(`kill @e[type=minecraft:shulker,x=${occupied.x + 0.5},y=${occupied.y + 0.5},z=${occupied.z + 0.5},distance=..0.9]`)
   await inEnd(`setblock ${blocked.x} ${blocked.y} ${blocked.z} minecraft:air`)
+  const mined = learned.spots[minedOut]
+  const [dx, dy, dz] = FACES[mined.face]
+  await inEnd(`setblock ${mined.x + dx} ${mined.y + dy} ${mined.z + dz} minecraft:purpur_block`) // something to stick to again
   const unclaim = JSON.parse(await command('ecsrtest unclaim'))
   check('the claim is removed', unclaim.deleted === 1, JSON.stringify(unclaim))
   const refill = (await asPlayer('Scout', '/ecsr refill')).join(' | ')
@@ -142,7 +162,7 @@ async function phaseRestart ({ learned, empty, claimed }) {
     const st = await cityState()
     return tagged(st).length === learned.spots.length ? st : null
   }, 30_000).catch(() => null) ?? await cityState()
-  check('once cleared and unclaimed, the last spots are refilled too: the city is full again',
+  check('once cleared, unclaimed and built back, the last spots are refilled too: the city is full again',
     tagged(s).length === learned.spots.length && s.spots.every(spot => spot.alive), JSON.stringify(s.spots))
   await stopServer()
 }

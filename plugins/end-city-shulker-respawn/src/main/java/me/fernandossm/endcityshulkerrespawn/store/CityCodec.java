@@ -28,7 +28,6 @@ public final class CityCodec {
     private final NamespacedKey y;
     private final NamespacedKey z;
     private final NamespacedKey face;
-    private final NamespacedKey color;
     private final NamespacedKey due;
 
     public CityCodec(Plugin plugin) {
@@ -40,7 +39,6 @@ public final class CityCodec {
         y = new NamespacedKey(plugin, "y");
         z = new NamespacedKey(plugin, "z");
         face = new NamespacedKey(plugin, "face");
-        color = new NamespacedKey(plugin, "color");
         due = new NamespacedKey(plugin, "due");
     }
 
@@ -59,7 +57,6 @@ public final class CityCodec {
                     s.getOrDefault(y, PersistentDataType.INTEGER, 0),
                     s.getOrDefault(z, PersistentDataType.INTEGER, 0),
                     faces[Math.floorMod(f, faces.length)],
-                    s.getOrDefault(color, PersistentDataType.BYTE, (byte) Spot.NO_COLOR),
                     s.getOrDefault(due, PersistentDataType.LONG, Spot.ALIVE)));
         }
         Set<Long> chunks = new LinkedHashSet<>();
@@ -78,7 +75,6 @@ public final class CityCodec {
             s.set(y, PersistentDataType.INTEGER, spot.y());
             s.set(z, PersistentDataType.INTEGER, spot.z());
             s.set(face, PersistentDataType.BYTE, (byte) spot.face().ordinal());
-            s.set(color, PersistentDataType.BYTE, (byte) spot.color());
             s.set(due, PersistentDataType.LONG, spot.dueAt());
             list.add(s);
         }

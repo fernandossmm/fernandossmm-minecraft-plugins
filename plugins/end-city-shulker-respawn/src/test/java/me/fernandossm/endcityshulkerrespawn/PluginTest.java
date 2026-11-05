@@ -104,18 +104,15 @@ class PluginTest {
         @Test
         void theFirstLoadLearnsTheCitysShulkersInThatChunk() {
             shulker(4, 70, 4);
-            Shulker red = shulker(8, 80, 8);
-            red.setColor(DyeColor.RED);
+            shulker(8, 80, 8);
             shulker(9, 110, 9); // above the city
             load(0, 0);
 
             assertEquals(2, data().spots().size());
             assertTrue(data().learned(0, 0));
-            Spot redSpot = spotAt(8);
-            assertEquals(List.of(8, 80, 8), List.of(redSpot.x(), redSpot.y(), redSpot.z()));
-            assertEquals(Spot.Face.DOWN, redSpot.face());
-            assertEquals(DyeColor.RED.ordinal(), redSpot.color());
-            assertEquals(Spot.NO_COLOR, spotAt(4).color(), "the default purple is no colour");
+            Spot spot = spotAt(8);
+            assertEquals(List.of(8, 80, 8), List.of(spot.x(), spot.y(), spot.z()));
+            assertEquals(Spot.Face.DOWN, spot.face());
             assertTrue(data().spots().stream().allMatch(Spot::alive));
         }
 
@@ -240,7 +237,7 @@ class PluginTest {
             Shulker s = back.getFirst();
             assertEquals(new Location(end, 4.5, 70, 4.5), s.getLocation());
             assertEquals(BlockFace.DOWN, s.getAttachedFace());
-            assertEquals(DyeColor.BLUE, s.getColor());
+            assertEquals(null, s.getColor(), "the default purple, whatever colour the one before had");
             assertEquals(List.of(s), keptForever, "never despawns, like the city's own");
             assertTrue(data().spots().getFirst().alive());
         }
@@ -290,11 +287,16 @@ class PluginTest {
         }
 
         @Test
-        void aSpotWithNothingSolidAroundItIsLeftToVanilla() {
+        void aSpotWithNothingSolidAroundItWaitsUntilThereIs() {
             clock.addAndGet(COOLDOWN);
             end.getBlockAt(4, 69, 4).setType(Material.AIR);
             load(0, 0);
-            assertEquals(1, shulkersIn(0, 0).size(), "spawned there; vanilla settles it as it settled the original");
+            assertTrue(shulkersIn(0, 0).isEmpty(), "vanilla would teleport it away, and the spot would follow it");
+            assertFalse(data().spots().getFirst().alive(), "still due");
+
+            end.getBlockAt(4, 69, 4).setType(Material.PURPUR_BLOCK);
+            load(0, 0);
+            assertEquals(1, shulkersIn(0, 0).size(), "back once there is something to stick to");
         }
 
         @Test
@@ -365,6 +367,19 @@ class PluginTest {
             clock.addAndGet(COOLDOWN);
             load(0, 0);
             assertTrue(shulkersIn(0, 0).isEmpty());
+        }
+
+        @Test
+        void otherPluginsCanColourTheNewShulker() {
+            server.getPluginManager().registerEvents(new Listener() {
+                @EventHandler
+                public void colour(CityShulkerRespawnEvent event) {
+                    event.setColor(DyeColor.LIME);
+                }
+            }, plugin);
+            clock.addAndGet(COOLDOWN);
+            load(0, 0);
+            assertEquals(DyeColor.LIME, shulkersIn(0, 0).getFirst().getColor());
         }
 
         @Test

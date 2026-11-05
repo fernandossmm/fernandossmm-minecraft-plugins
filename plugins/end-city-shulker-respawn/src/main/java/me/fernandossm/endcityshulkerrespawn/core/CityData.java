@@ -99,7 +99,7 @@ public final class CityData {
         if (s.x() == x && s.y() == y && s.z() == z && s.face() == face) {
             return false;
         }
-        spots.set(index, new Spot(x, y, z, face, s.color(), s.dueAt()));
+        spots.set(index, new Spot(x, y, z, face, s.dueAt()));
         return true;
     }
 

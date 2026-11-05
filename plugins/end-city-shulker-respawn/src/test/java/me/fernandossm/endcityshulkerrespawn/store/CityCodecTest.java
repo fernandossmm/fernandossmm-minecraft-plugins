@@ -41,8 +41,8 @@ class CityCodecTest {
     void cityDataSurvivesARoundTrip() {
         CityCodec codec = new CityCodec(plugin);
         CityData data = new CityData(List.of(
-                new Spot(-100, 80, 2000, Face.DOWN, Spot.NO_COLOR, Spot.ALIVE),
-                new Spot(5, 64, -7, Face.EAST, 14, 1_234_567_890_123L)),
+                new Spot(-100, 80, 2000, Face.DOWN, Spot.ALIVE),
+                new Spot(5, 64, -7, Face.EAST, 1_234_567_890_123L)),
                 Set.of(CityData.chunkKey(-7, 125), CityData.chunkKey(0, -1)), 3);
         codec.write(pdc, data);
         CityData back = codec.read(pdc);

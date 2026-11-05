@@ -48,8 +48,12 @@ let current
 /** The running server: its output so far. */
 export const server = () => current
 
-/** A fresh world in dev/e2e/run/, and each plugin's config.yml as given (plugin folder name → entries). */
-export function prepareRun (configs) {
+/**
+ * A fresh world in dev/e2e/run/, and each plugin's config.yml as given (plugin folder name → entries).
+ * SkinsRestorer looks every joining player's skin up online, before the login completes; slow or rate-limited,
+ * that runs past the 30 s login limit and the bot is kicked. Only a suite that needs skins turns it on.
+ */
+export function prepareRun (configs, { skins = false } = {}) {
   rmSync(RUN, { recursive: true, force: true })
   mkdirSync(RUN, { recursive: true })
   writeFileSync(path.join(RUN, 'eula.txt'), 'eula=true\n')
@@ -68,6 +72,7 @@ export function prepareRun (configs) {
     'level-seed=e2e',
     ''
   ].join('\n'))
+  if (!skins) writeConfig('SkinsRestorer', { advanced: '\n    disableOnJoinSkins: true' })
   for (const [plugin, entries] of Object.entries(configs)) writeConfig(plugin, entries)
 }
 
@@ -181,16 +186,30 @@ export const inEnd = cmd => command(`execute in ${END} run ${cmd}`)
 
 export const bots = new Map()
 
-/** A bot joins; it takes no damage and never gets hungry. */
-export async function join (name) {
+/**
+ * A bot joins and spawns; it takes no damage and never gets hungry. A login that ends or stalls without a spawn (seen right after a restart, while the
+ * server is still busy) is tried once more, instead of waiting for ever.
+ */
+export async function join (name, attempts = 2) {
   const bot = mineflayer.createBot({ host: '127.0.0.1', port: PORT, username: name, version: BOT_VERSION, auth: 'offline' })
   bot.chatLog = []
   bot.on('messagestr', message => bot.chatLog.push(message))
-  await new Promise((resolve, reject) => {
-    bot.once('spawn', resolve)
-    bot.once('kicked', reason => reject(new Error(`${name} was kicked: ${JSON.stringify(reason)}`)))
-    bot.once('error', reject)
-  })
+  try {
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(`${name} did not spawn within 60 s`)), 60_000)
+      bot.once('spawn', () => { clearTimeout(timer); resolve() })
+      bot.once('kicked', reason => { clearTimeout(timer); reject(new Error(`${name} was kicked: ${JSON.stringify(reason)}`)) })
+      bot.once('error', error => { clearTimeout(timer); reject(error) })
+      bot.once('end', reason => { clearTimeout(timer); reject(new Error(`${name}'s connection ended before spawning: ${reason}`)) })
+    })
+  } catch (error) {
+    bot.removeAllListeners()
+    bot.end()
+    if (attempts <= 1) throw error
+    console.log(`      ${error.message}; joining again`)
+    await sleep(5000)
+    return join(name, attempts - 1)
+  }
   bots.set(name, bot)
   await command(`effect give ${name} minecraft:resistance infinite 4 true`)
   await command(`effect give ${name} minecraft:saturation infinite 0 true`)

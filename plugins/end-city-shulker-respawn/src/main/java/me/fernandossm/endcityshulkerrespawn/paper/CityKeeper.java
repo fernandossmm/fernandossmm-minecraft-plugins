@@ -173,19 +173,17 @@ public final class CityKeeper {
         // Only a shulker in this very block takes the spot; one in the block below or beside it does not.
         boolean taken = world.getNearbyEntitiesByType(Shulker.class, at, 1.5).stream()
                 .anyMatch(s -> s.getLocation().getBlock().equals(block));
-        if (!block.getType().isAir()
-                || taken
-                || claims.get().claimed(at)
-                || !new CityShulkerRespawnEvent(at, city.key(), index).callEvent()) {
+        if (!block.getType().isAir() || face == null || taken || claims.get().claimed(at)) {
             return false;
         }
+        CityShulkerRespawnEvent event = new CityShulkerRespawnEvent(at, city.key(), index);
+        if (!event.callEvent()) {
+            return false;
+        }
+        DyeColor color = event.getColor();
         world.spawn(at, Shulker.class, shulker -> {
-            if (face != null) {
-                shulker.setAttachedFace(face);
-            }
-            if (spot.color() != Spot.NO_COLOR) {
-                shulker.setColor(DyeColor.values()[spot.color()]);
-            }
+            shulker.setAttachedFace(face);
+            shulker.setColor(color);
             keepForever.accept(shulker);
             tags.write(shulker, new ShulkerTag(city.key(), index, data.generation()));
         });
@@ -194,8 +192,8 @@ public final class CityKeeper {
 
     /**
      * The face to stick the new shulker to: the one learned if its block is solid, or else any solid one.
-     * Null if nothing around is solid (a spot never settled, or players mined around it): the shulker is
-     * then left to vanilla, which settles it as it settled the city's own, teleporting it if it must.
+     * Null if nothing around is solid (players mined around it): the spot then stays empty until something
+     * is. Spawning it anyway would let vanilla teleport it away, and the spot would follow it there.
      */
     private static BlockFace attachment(Block block, BlockFace learned) {
         if (block.getRelative(learned).getType().isSolid()) {
@@ -224,10 +222,7 @@ public final class CityKeeper {
     }
 
     private static Spot spotOf(Shulker shulker) {
-        DyeColor color = shulker.getColor();
         return new Spot(shulker.getLocation().getBlockX(), shulker.getLocation().getBlockY(), shulker.getLocation().getBlockZ(),
-                Spot.Face.valueOf(shulker.getAttachedFace().name()),
-                color == null ? Spot.NO_COLOR : color.ordinal(),
-                Spot.ALIVE);
+                Spot.Face.valueOf(shulker.getAttachedFace().name()), Spot.ALIVE);
     }
 }
