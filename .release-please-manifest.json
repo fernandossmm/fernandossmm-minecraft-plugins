@@ -1,9 +1,9 @@
 {
-  "plugins/multiplayer-dragon-rebirth": "0.0.0",
-  "plugins/end-city-shulker-respawn": "0.0.0",
-  "plugins/shiny-shulkers": "0.0.0",
-  "plugins/bluemap-griefprevention": "0.0.0",
-  "plugins/bluemap-banner-markers": "0.0.0",
-  "plugins/discordsrv-fail-closed": "0.0.0"
-  "plugins/bluemap-skinsrestorer-heads": "0.0.0"
+  "plugins/multiplayer-dragon-rebirth": "0.1.0",
+  "plugins/end-city-shulker-respawn": "0.1.0",
+  "plugins/shiny-shulkers": "0.1.0",
+  "plugins/bluemap-griefprevention": "0.1.0",
+  "plugins/bluemap-banner-markers": "0.1.0",
+  "plugins/discordsrv-fail-closed": "0.1.0",
+  "plugins/bluemap-skinsrestorer-heads": "0.1.0"
 }
