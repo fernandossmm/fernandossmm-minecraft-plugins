@@ -1,0 +1,10 @@
+# DiscordSRV fail-closed
+#
+# DiscordSRV's "Require linked account to play" turns away players without a linked Discord account. When
+# DiscordSRV is disabled (a missing, mistyped or revoked bot token, or a crash while it starts), that check
+# goes away with it and anyone can join. This plugin refuses every login unless DiscordSRV is enabled and
+# has "Require linked account to play" (linking.yml) switched on. While both hold, it does nothing and
+# DiscordSRV decides. There is no bypass: fix DiscordSRV from the server console.
+
+# What a refused player sees, in MiniMessage format (https://docs.advntr.dev/minimessage/format.html).
+message: "<red>Joining is paused: the Discord account check is offline.</red>\n<gray>Please try again in a few minutes.</gray>"

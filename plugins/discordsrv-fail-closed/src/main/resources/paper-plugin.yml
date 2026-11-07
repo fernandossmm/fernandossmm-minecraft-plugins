@@ -1,0 +1,7 @@
+name: DiscordSRVFailClosed
+version: "${version}"
+main: me.fernandossm.discordsrvfailclosed.DiscordSrvFailClosed
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"

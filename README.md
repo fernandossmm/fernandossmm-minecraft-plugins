@@ -9,6 +9,7 @@ Small Paper plugins that fill gaps no maintained plugin covers. Each one is inde
 | [Shiny Shulkers](plugins/shiny-shulkers) | End city shulkers have a 1 in 50 chance to be generated in a dye colour instead of purple | not released yet |
 | [BlueMap GriefPrevention](plugins/bluemap-griefprevention) | GriefPrevention claims on BlueMap, one shape per area, in each owner's locator bar colour | not released yet |
 | [BlueMap Banner Markers](plugins/bluemap-banner-markers) | A name tag on a banner makes a waypoint: the banner itself on BlueMap, its name floating over it | not released yet |
+| [DiscordSRV fail-closed](plugins/discordsrv-fail-closed) | Refuses every login while DiscordSRV is down, so its Discord account check can't fail open | not released yet |
 
 ## Supported versions
 

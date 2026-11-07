@@ -12,10 +12,11 @@ export const HERE = path.dirname(fileURLToPath(import.meta.url))
 export const ROOT = path.resolve(HERE, '../..')
 export const RUN = path.join(HERE, 'run')
 export const END = 'minecraft:the_end'
-const PORT = 25566
+export const PORT = 25566
 const RCON_PORT = 25575
 const RCON_PASSWORD = 'e2e'
-const BOT_VERSION = '26.1'
+export const BOT_VERSION = '26.1'
+const MOVEMENT_PACKETS = new Set(['position', 'position_look', 'look', 'flying'])
 // By absolute path: Windows may be set not to run programs from the current directory.
 export const GRADLEW = path.join(ROOT, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew')
 
@@ -54,11 +55,14 @@ export const server = () => current
  * that runs past the 30 s login limit and the bot is kicked. Only a suite that needs skins turns it on.
  */
 export function prepareRun (configs, { skins = false } = {}) {
-  rmSync(RUN, { recursive: true, force: true })
+  // Retried: after an abandoned suite, the killed server may still hold files for a moment (Windows).
+  rmSync(RUN, { recursive: true, force: true, maxRetries: 20, retryDelay: 500 })
   mkdirSync(RUN, { recursive: true })
   writeFileSync(path.join(RUN, 'eula.txt'), 'eula=true\n')
   writeFileSync(path.join(RUN, 'server.properties'), [
     'online-mode=false',
+    // New servers have the whitelist on since 26.3.
+    'white-list=false',
     `server-port=${PORT}`,
     'enable-rcon=true',
     `rcon.port=${RCON_PORT}`,
@@ -73,6 +77,8 @@ export function prepareRun (configs, { skins = false } = {}) {
     ''
   ].join('\n'))
   if (!skins) writeConfig('SkinsRestorer', { advanced: '\n    disableOnJoinSkins: true' })
+  // GriefPrevention turns away a player who logged in less than a minute ago; suites log bots out and back in.
+  writeConfig('GriefPreventionData', { GriefPrevention: '\n  Spam:\n    LoginCooldownSeconds: 0' })
   for (const [plugin, entries] of Object.entries(configs)) writeConfig(plugin, entries)
 }
 
@@ -83,9 +89,10 @@ export function writeConfig (plugin, entries) {
   writeFileSync(path.join(dir, 'config.yml'), Object.entries(entries).map(([k, v]) => `${k}: ${v}`).join('\n') + '\n')
 }
 
-export async function startServer (label) {
+/** Starts the server; `task` picks a server set up for one suite (dev/build.gradle.kts). */
+export async function startServer (label, { task = 'runE2eServer' } = {}) {
   const log = createWriteStream(path.join(HERE, `server-${label}.log`))
-  const child = spawn(`"${GRADLEW}"`, ['runE2eServer', '--console=plain'], { cwd: ROOT, shell: true })
+  const child = spawn(`"${GRADLEW}"`, [task, '--console=plain'], { cwd: ROOT, shell: true })
   let output = ''
   const onData = data => { output += data.toString(); log.write(data) }
   child.stdout.on('data', onData)
@@ -123,6 +130,15 @@ function killTree (child) {
   try {
     if (process.platform === 'win32') execSync(`taskkill /pid ${child.pid} /T /F`, { stdio: 'ignore' })
     else child.kill('SIGKILL')
+  } catch {}
+  // The server itself is forked by the Gradle daemon, not by gradlew, so it outlives the tree above; it is
+  // found by its port. Left running, it keeps run/ locked and the port taken for the next suite.
+  try {
+    if (process.platform === 'win32') {
+      execSync(`powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort ${PORT} -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }"`, { stdio: 'ignore' })
+    } else {
+      execSync(`lsof -ti tcp:${PORT} -sTCP:LISTEN | xargs -r kill -9`, { stdio: 'ignore' })
+    }
   } catch {}
 }
 
@@ -192,6 +208,11 @@ export const bots = new Map()
  */
 export async function join (name, attempts = 2) {
   const bot = mineflayer.createBot({ host: '127.0.0.1', port: PORT, username: name, version: BOT_VERSION, auth: 'offline' })
+  // Since 26.3, the server kicks the bots for invalid movement on the first movement packet that ViaBackwards
+  // translates, even with physics off. The bots never need to move themselves (commands teleport them), so they
+  // send none.
+  const write = bot._client.write.bind(bot._client)
+  bot._client.write = (packet, params) => { if (!MOVEMENT_PACKETS.has(packet)) write(packet, params) }
   bot.chatLog = []
   bot.on('messagestr', message => bot.chatLog.push(message))
   try {
