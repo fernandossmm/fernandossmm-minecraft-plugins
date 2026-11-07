@@ -15,7 +15,7 @@ No client mods; Paper only.
 2. On its first start the plugin records every player who has ever joined the server as having fought the dragon, so only players new to the server are newcomers. Set `first-run: NONE` before the first start to make everyone a newcomer instead.
 3. Give staff `multiplayerdragonrebirth.exempt` so their visits to the End do not summon dragons.
 
-**Requirements:** Paper 26.2, Java 25. Folia is not supported.
+**Requirements:** Paper 26.3, Java 25. Folia is not supported.
 
 ## What players will notice
 

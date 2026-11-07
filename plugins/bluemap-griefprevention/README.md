@@ -14,7 +14,7 @@ The map follows claims as they are created, resized, extended, transferred, dele
 
 Put the jar in `plugins/` next to GriefPrevention and BlueMap, and start the server.
 
-**Requirements:** Paper 26.2, Java 25, GriefPrevention 16.18 or later, BlueMap 5. Folia is not supported.
+**Requirements:** Paper 26.3, Java 25, GriefPrevention 16.18 or later, BlueMap 5. Folia is not supported.
 
 ## Configuration
 
