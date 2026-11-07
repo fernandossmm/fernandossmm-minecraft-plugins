@@ -82,6 +82,16 @@ final class BbmOps {
                 BufferedImage skin = ImageIO.read(in);
                 o.addProperty("face", String.format("%08x", skin.getRGB(8 + dx, 8 + dy)));
                 o.addProperty("hat", String.format("%08x", skin.getRGB(40 + dx, 8 + dy)));
+                o.addProperty("height", skin.getHeight());
+                // Whether the game draws the hat layer: always on 64x64 skins; on old 64x32 ones only if it has
+                // a transparent pixel (an opaque one is ignored, the "Notch transparency hack").
+                boolean hatShown = skin.getHeight() == 64;
+                for (int y = 0; y < 16 && !hatShown; y++) {
+                    for (int x = 32; x < 64 && !hatShown; x++) {
+                        hatShown = (skin.getRGB(x, y) >>> 24) < 128;
+                    }
+                }
+                o.addProperty("hatShown", hatShown);
             } catch (Exception e) {
                 o.addProperty("error", e.toString());
             }

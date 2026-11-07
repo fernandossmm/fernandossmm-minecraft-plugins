@@ -18,6 +18,12 @@
     },
     "plugins/bluemap-banner-markers": {
       "component": "bluemap-banner-markers"
+    },
+    "plugins/discordsrv-fail-closed": {
+      "component": "discordsrv-fail-closed"
+    },
+    "plugins/bluemap-skinsrestorer-heads": {
+      "component": "bluemap-skinsrestorer-heads"
     }
   }
 }
