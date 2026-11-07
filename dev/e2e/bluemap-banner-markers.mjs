@@ -4,9 +4,9 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { RUN, check, command, join, prepareRun, sleep, startServer, stopServer, waitFor } from './lib.mjs'
+import { RUN, WEB_PORT, check, command, join, prepareRun, sleep, startServer, stopServer, waitFor } from './lib.mjs'
 
-const WEB = 'http://127.0.0.1:8100/'
+const WEB = `http://127.0.0.1:${WEB_PORT}/`
 const MARKERS_URL = `${WEB}maps/world/live/markers.json`
 const SET = 'banner-waypoints'
 const ALICE = 'jeb_'

@@ -21,6 +21,7 @@ const suites = {
   'bluemap-griefprevention': claims,
   'bluemap-banner-markers': banners,
   'discordsrv-fail-closed': failClosed
+  'bluemap-skinsrestorer-heads': heads
 }
 
 const requested = process.argv.slice(2)
