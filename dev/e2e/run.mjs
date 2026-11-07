@@ -12,6 +12,7 @@ import * as shulkers from './end-city-shulker-respawn.mjs'
 import * as shiny from './shiny-shulkers.mjs'
 import * as claims from './bluemap-griefprevention.mjs'
 import * as banners from './bluemap-banner-markers.mjs'
+import * as heads from './bluemap-skinsrestorer-heads.mjs'
 import * as failClosed from './discordsrv-fail-closed.mjs'
 
 const suites = {
@@ -20,7 +21,7 @@ const suites = {
   'shiny-shulkers': shiny,
   'bluemap-griefprevention': claims,
   'bluemap-banner-markers': banners,
-  'discordsrv-fail-closed': failClosed
+  'discordsrv-fail-closed': failClosed,
   'bluemap-skinsrestorer-heads': heads
 }
 

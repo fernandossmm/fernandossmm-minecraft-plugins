@@ -13,7 +13,7 @@ export const ROOT = path.resolve(HERE, '../..')
 export const RUN = path.join(HERE, 'run')
 export const END = 'minecraft:the_end'
 // E2E_PORT, E2E_RCON_PORT and E2E_WEB_PORT (BlueMap's web server) let two checkouts run their suites at once.
-const PORT = Number(process.env.E2E_PORT ?? 25566)
+export const PORT = Number(process.env.E2E_PORT ?? 25566)
 const RCON_PORT = Number(process.env.E2E_RCON_PORT ?? 25575)
 export const WEB_PORT = Number(process.env.E2E_WEB_PORT ?? 8100)
 const RCON_PASSWORD = 'e2e'
