@@ -27,7 +27,7 @@ No client mods; Paper only.
 
 Put the jar in `plugins/` next to DiscordSRV and start the server.
 
-**Requirements:** Paper 26.2, Java 25, DiscordSRV 1.x. Folia is not supported.
+**Requirements:** Paper 26.3, Java 25, DiscordSRV 1.x. Folia is not supported.
 
 The plugin protects the server only while it is loaded: if its jar is missing, nothing refuses logins. A server built from scripts or containers should check that the jar is there before it starts.
 

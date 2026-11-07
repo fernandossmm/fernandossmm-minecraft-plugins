@@ -4,25 +4,25 @@ Small Paper plugins that fill gaps with no current public solution. Each one is 
 
 | Plugin                                                             | What it does                                                                                                  | Versions |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | -------- |
-| [Multiplayer Dragon Rebirth](plugins/multiplayer-dragon-rebirth)   | Gives every player their own Ender Dragon fight, with its egg and full experience                             | 26.2     |
-| [End City Shulker Respawn](plugins/end-city-shulker-respawn)       | Shulkers come back to End cities, on the spots where they were, some time after they die                      | 26.2     |
-| [Shiny Shulkers](plugins/shiny-shulkers)                           | End city shulkers have a small chance to be generated in a different color instead of purple                  | 26.2     |
-| [BlueMap GriefPrevention](plugins/bluemap-griefprevention)         | GriefPrevention claims on BlueMap, one shape per area, in each owner's colour                                 | 26.2     |
-| [BlueMap Banner Markers](plugins/bluemap-banner-markers)           | A name tag on a banner makes a waypoint on Bluemap, showing the banner pattern                                | 26.2     |
-| [BlueMap SkinsRestorer Heads](plugins/bluemap-skinsrestorer-heads) | BlueMap's player heads show the skin each player has in game, such as SkinsRestorer's on offline-mode servers | 26.2     |
-| [DiscordSRV fail-closed](plugins/discordsrv-fail-closed)           | Refuses every login while DiscordSRV is down, so its Discord account check can't fail open                    | 26.2     |
+| [Multiplayer Dragon Rebirth](plugins/multiplayer-dragon-rebirth)   | Gives every player their own Ender Dragon fight, with its egg and full experience                             | 26.3     |
+| [End City Shulker Respawn](plugins/end-city-shulker-respawn)       | Shulkers come back to End cities, on the spots where they were, some time after they die                      | 26.3     |
+| [Shiny Shulkers](plugins/shiny-shulkers)                           | End city shulkers have a small chance to be generated in a different color instead of purple                  | 26.3     |
+| [BlueMap GriefPrevention](plugins/bluemap-griefprevention)         | GriefPrevention claims on BlueMap, one shape per area, in each owner's colour                                 | 26.3     |
+| [BlueMap Banner Markers](plugins/bluemap-banner-markers)           | A name tag on a banner makes a waypoint on Bluemap, showing the banner pattern                                | 26.3     |
+| [BlueMap SkinsRestorer Heads](plugins/bluemap-skinsrestorer-heads) | BlueMap's player heads show the skin each player has in game, such as SkinsRestorer's on offline-mode servers | 26.3     |
+| [DiscordSRV fail-closed](plugins/discordsrv-fail-closed)           | Refuses every login while DiscordSRV is down, so its Discord account check can't fail open                    | 26.3     |
 
 ## Supported versions
 
-Currently 26.2. Older version support is not planned.
+Currently 26.2 and 26.3. Older version support is not planned.
 
 ## Building
 
 Needs JDK 25 (Gradle downloads one if none is installed).
 
 ```sh
-./gradlew build         # every plugin; jars in plugins/<name>/build/libs/
-./gradlew runServer     # a local Paper server in dev/run/ with every plugin loaded
+./gradlew build           # every plugin; jars in plugins/<name>/build/libs/
+./gradlew runServer       # a local Paper server in dev/run/ with every plugin loaded
 ```
 
 `runServer` accepts Mojang's EULA for that local server through Paper's command-line flag. Delete `dev/run/` to start from a fresh world.

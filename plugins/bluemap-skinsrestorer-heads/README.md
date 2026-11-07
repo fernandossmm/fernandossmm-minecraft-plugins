@@ -13,7 +13,7 @@ No client mods; Paper only. No commands, no configuration.
 
 Put the jar in `plugins/` next to BlueMap, and start the server.
 
-**Requirements:** Paper 26.2, Java 25, BlueMap 5. SkinsRestorer, or any plugin that changes players' in-game skins; the plugin reads the skin from the player, so it works with whichever plugin set it. Folia is not supported.
+**Requirements:** Paper 26.3, Java 25, BlueMap 5. SkinsRestorer, or any plugin that changes players' in-game skins; the plugin reads the skin from the player, so it works with whichever plugin set it. Folia is not supported.
 
 BlueMap needs `accept-download: true` in `plugins/BlueMap/core.conf`, as it does to render anything: the default skins are read from the Minecraft client jar BlueMap downloads. Nothing of Mojang's is shipped with this plugin.
 

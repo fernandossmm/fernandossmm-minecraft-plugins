@@ -12,7 +12,7 @@ No client mods; Paper only.
 
 Put the jar in `plugins/` and start the server, before the End is explored or pre-generated: only cities generated afterwards get shiny shulkers.
 
-**Requirements:** Paper 26.2, Java 25. Folia is not supported.
+**Requirements:** Paper 26.3, Java 25. Folia is not supported.
 
 ## Configuration
 

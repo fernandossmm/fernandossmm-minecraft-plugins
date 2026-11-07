@@ -14,7 +14,7 @@ No client mods; Paper only.
 1. Put the jar in `plugins/` and start the server.
 2. **Install it before players explore the End, and before pre-generating it** (with Chunky or similar): the plugin can only learn the shulkers a chunk has the first time it loads. On a world whose cities were already looted, each city learns the shulkers still in it; a city already emptied learns nothing. Vanilla does not keep the original positions anywhere a plugin can read them.
 
-**Requirements:** Paper 26.2, Java 25. Folia is not supported. GriefPrevention is optional (see below).
+**Requirements:** Paper 26.3, Java 25. Folia is not supported. GriefPrevention is optional (see below).
 
 ## When a spot stays empty
 
