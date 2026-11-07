@@ -14,6 +14,8 @@ Put the jar in `plugins/` and start the server, before the End is explored or pr
 
 **Requirements:** Paper 26.3, Java 25. Folia is not supported.
 
+**Minecraft versions:** 0.2.x for 26.3, 0.1.x for 26.2. Each release's jar is on the [GitHub releases](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/releases).
+
 ## Configuration
 
 `plugins/ShinyShulkers/config.yml`:

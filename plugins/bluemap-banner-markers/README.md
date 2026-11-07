@@ -17,6 +17,8 @@ Put the jar in `plugins/` next to BlueMap, and start the server.
 
 **Requirements:** Paper 26.3, Java 25, BlueMap 5. Optional: GriefPrevention 16.18 or later, SkinsRestorer (for faces on offline-mode servers). Folia is not supported.
 
+**Minecraft versions:** 0.2.x for 26.3, 0.1.x for 26.2. Each release's jar is on the [GitHub releases](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/releases).
+
 BlueMap needs `accept-download: true` in `plugins/BlueMap/core.conf`, as it does to render anything: the banner icons and default faces are drawn from the Minecraft textures BlueMap downloads. Nothing of Mojang's is shipped with this plugin.
 
 ## Configuration

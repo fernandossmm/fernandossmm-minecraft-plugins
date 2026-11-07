@@ -29,6 +29,8 @@ Put the jar in `plugins/` next to DiscordSRV and start the server.
 
 **Requirements:** Paper 26.3, Java 25, DiscordSRV 1.x. Folia is not supported.
 
+**Minecraft versions:** 0.2.x for 26.3, 0.1.x for 26.2. Each release's jar is on the [GitHub releases](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/releases).
+
 The plugin protects the server only while it is loaded: if its jar is missing, nothing refuses logins. A server built from scripts or containers should check that the jar is there before it starts.
 
 ## Configuration

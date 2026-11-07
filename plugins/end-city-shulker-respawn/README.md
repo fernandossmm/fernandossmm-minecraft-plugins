@@ -16,6 +16,8 @@ No client mods; Paper only.
 
 **Requirements:** Paper 26.3, Java 25. Folia is not supported. GriefPrevention is optional (see below).
 
+**Minecraft versions:** 0.2.x for 26.3, 0.1.x for 26.2. Each release's jar is on the [GitHub releases](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/releases).
+
 ## When a spot stays empty
 
 A due spot is skipped, and tried again on the next load, when:

@@ -16,6 +16,8 @@ Put the jar in `plugins/` next to GriefPrevention and BlueMap, and start the ser
 
 **Requirements:** Paper 26.3, Java 25, GriefPrevention 16.18 or later, BlueMap 5. Folia is not supported.
 
+**Minecraft versions:** 0.2.x for 26.3, 0.1.x for 26.2. Each release's jar is on the [GitHub releases](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/releases).
+
 ## Configuration
 
 `plugins/BlueMapGriefPrevention/config.yml`:
