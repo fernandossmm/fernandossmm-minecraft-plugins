@@ -4,6 +4,6 @@
   "plugins/shiny-shulkers": "0.0.0",
   "plugins/bluemap-griefprevention": "0.0.0",
   "plugins/bluemap-banner-markers": "0.0.0",
-  "plugins/discordsrv-fail-closed": "0.0.0"
+  "plugins/discordsrv-fail-closed": "0.0.0",
   "plugins/bluemap-skinsrestorer-heads": "0.0.0"
 }
