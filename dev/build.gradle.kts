@@ -26,7 +26,7 @@ tasks.runServer {
         // Third-party plugins that ours integrate with, pinned to the version in gradle/libs.versions.toml.
         url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7
         url("https://cdn.modrinth.com/data/swbUV1cr/versions/uHQIrUdf/bluemap-5.29-paper.jar") // for bluemap-griefprevention
-        url("https://cdn.modrinth.com/data/TsLS8Py5/versions/ziIzW16f/SkinsRestorer.jar") // 15.12.6, for bluemap-banner-markers
+        url("https://cdn.modrinth.com/data/TsLS8Py5/versions/ziIzW16f/SkinsRestorer.jar") // 15.12.6, for bluemap-banner-markers and bluemap-skinsrestorer-heads
     }
 }
 

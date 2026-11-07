@@ -1,0 +1,18 @@
+name: BlueMapSkinsRestorerHeads
+version: "${version}"
+main: me.fernandossm.bluemapskinsrestorerheads.BlueMapSkinsRestorerHeads
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"
+dependencies:
+  server:
+    BlueMap:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    # Not used directly: the skin is read from the player, where SkinsRestorer puts it. Loading after it only
+    # keeps the start-up order obvious.
+    SkinsRestorer:
+      load: BEFORE
+      required: false

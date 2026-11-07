@@ -3,5 +3,6 @@
   "plugins/end-city-shulker-respawn": "0.0.0",
   "plugins/shiny-shulkers": "0.0.0",
   "plugins/bluemap-griefprevention": "0.0.0",
-  "plugins/bluemap-banner-markers": "0.0.0"
+  "plugins/bluemap-banner-markers": "0.0.0",
+  "plugins/bluemap-skinsrestorer-heads": "0.0.0"
 }

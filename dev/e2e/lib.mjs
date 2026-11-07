@@ -12,8 +12,10 @@ export const HERE = path.dirname(fileURLToPath(import.meta.url))
 export const ROOT = path.resolve(HERE, '../..')
 export const RUN = path.join(HERE, 'run')
 export const END = 'minecraft:the_end'
-const PORT = 25566
-const RCON_PORT = 25575
+// E2E_PORT, E2E_RCON_PORT and E2E_WEB_PORT (BlueMap's web server) let two checkouts run their suites at once.
+const PORT = Number(process.env.E2E_PORT ?? 25566)
+const RCON_PORT = Number(process.env.E2E_RCON_PORT ?? 25575)
+export const WEB_PORT = Number(process.env.E2E_WEB_PORT ?? 8100)
 const RCON_PASSWORD = 'e2e'
 const BOT_VERSION = '26.1'
 // By absolute path: Windows may be set not to run programs from the current directory.
@@ -74,6 +76,10 @@ export function prepareRun (configs, { skins = false } = {}) {
   ].join('\n'))
   if (!skins) writeConfig('SkinsRestorer', { advanced: '\n    disableOnJoinSkins: true' })
   for (const [plugin, entries] of Object.entries(configs)) writeConfig(plugin, entries)
+  if (WEB_PORT !== 8100) {
+    mkdirSync(path.join(RUN, 'plugins', 'BlueMap'), { recursive: true })
+    writeFileSync(path.join(RUN, 'plugins', 'BlueMap', 'webserver.conf'), `port: ${WEB_PORT}\n`)
+  }
 }
 
 /** Replaces a plugin's config.yml; keys not given take the plugin's defaults. */
