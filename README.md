@@ -21,8 +21,8 @@ Currently 26.2 and 26.3. Older version support is not planned.
 Needs JDK 25 (Gradle downloads one if none is installed).
 
 ```sh
-./gradlew build          # every plugin; jars in plugins/<name>/build/libs/
-./gradlew runServer      # a local Paper server in dev/run/ with every plugin loaded
+./gradlew build           # every plugin; jars in plugins/<name>/build/libs/
+./gradlew runServer       # a local Paper server in dev/run/ with every plugin loaded
 ```
 
 `runServer` accepts Mojang's EULA for that local server through Paper's command-line flag. Delete `dev/run/` to start from a fresh world.
