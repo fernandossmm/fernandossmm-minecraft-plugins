@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/compare/bluemap-griefprevention-v0.2.0...bluemap-griefprevention-v0.3.0) (2026-11-10)
+
+
+### Features
+
+* translatable player texts (BlueMap Banner Markers, BlueMap GriefPrevention) ([1a7120e](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/commit/1a7120eae1d9247fc032e3aab02ba82d07e377b9))
+
 ## [0.2.0](https://github.com/fernandossmm/fernandossmm-minecraft-plugins/compare/bluemap-griefprevention-v0.1.0...bluemap-griefprevention-v0.2.0) (2026-11-07)
 
 
