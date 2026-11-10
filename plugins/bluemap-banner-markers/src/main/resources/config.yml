@@ -19,3 +19,23 @@ max-name-length: 24
 layer:
   label: "Waypoints"
   hidden-by-default: false
+
+# What players read. Chat messages are MiniMessage (https://docs.papermc.io/adventure/minimessage/); an empty
+# one is not sent. A message left out keeps its English default.
+messages:
+  # A player tries to make a waypoint in a world not listed in `worlds`.
+  world-not-allowed: "<red>Banners in this world cannot be waypoints."
+  # Someone else's waypoint. Placeholders: <owner>, <name>
+  not-yours: "<red>This banner is <owner>'s waypoint, \"<name>\". Only <owner> can rename it."
+  # No build trust where the banner is (GriefPrevention).
+  no-build: "<red>You need permission to build here to make this banner a waypoint."
+  # Placeholders: <length>, <max>
+  name-too-long: "<red>That name has <length> characters; waypoint names can have at most <max>. Rename the tag in an anvil."
+  # Placeholders: <count>, <max>
+  limit-reached: "<red>You have <count> waypoints, the most allowed. Break one of your waypoint banners to make a new one."
+  # Placeholders: <name>
+  added: "<green>Waypoint \"<name>\" added to the map."
+  # Placeholders: <name>
+  renamed: "<green>Waypoint renamed to \"<name>\"."
+  # The map's popup, under the waypoint's name; plain text. Placeholders: <owner>
+  placed-by: "Placed by <owner>"

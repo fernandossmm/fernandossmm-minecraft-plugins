@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import me.fernandossm.bluemapbannermarkers.core.BannerImage;
 import me.fernandossm.bluemapbannermarkers.core.Faces;
+import me.fernandossm.bluemapbannermarkers.core.Messages;
 import me.fernandossm.bluemapbannermarkers.core.Names;
 import me.fernandossm.bluemapbannermarkers.core.Settings;
 import me.fernandossm.bluemapbannermarkers.core.Waypoint;
@@ -38,7 +39,7 @@ public final class BlueMapSink {
     static final String ASSETS = "bannermarkers/";
 
     /** What decides a marker's look; a marker is put again only when this changes. */
-    private record Shown(Waypoint waypoint, @Nullable String face, boolean icons) {}
+    private record Shown(Waypoint waypoint, @Nullable String face, boolean icons, String placedBy) {}
 
     /** The owner's face image and which skin it shows, or null. */
     public interface FaceSource {
@@ -107,7 +108,7 @@ public final class BlueMapSink {
         Map<String, Shown> now = new HashMap<>();
         for (Waypoint w : waypoints) {
             String id = markerId(w);
-            Shown look = new Shown(w, faces.version(w.owner()), icons);
+            Shown look = new Shown(w, faces.version(w.owner()), icons, settings.messages().placedBy());
             now.put(id, look);
             if (!look.equals(before.get(id)) || set.get(id) == null) {
                 set.put(id, marker(map, look));
@@ -137,13 +138,13 @@ public final class BlueMapSink {
             builder.defaultIcon();
         }
         String face = look.face() != null ? faceAsset(map, w.owner(), look.face()) : null;
-        return builder.detail(detail(w, face == null ? null : map.getAssetStorage().getAssetUrl(face))).build();
+        return builder.detail(detail(w, look.placedBy(), face == null ? null : map.getAssetStorage().getAssetUrl(face))).build();
     }
 
-    static String detail(Waypoint w, @Nullable String faceUrl) {
+    static String detail(Waypoint w, String placedBy, @Nullable String faceUrl) {
         // Wrapped, even inside a word, so a long name (or one from before a lower max-name-length) stays narrow.
-        String text = "<div style=\"max-width:16em;overflow-wrap:anywhere\"><b>" + Names.escape(w.name()) + "</b><br>Placed by "
-                + Names.escape(w.ownerName()) + "</div>";
+        String text = "<div style=\"max-width:16em;overflow-wrap:anywhere\"><b>" + Names.escape(w.name()) + "</b><br>"
+                + Messages.placedByHtml(placedBy, w.ownerName()) + "</div>";
         if (faceUrl == null) {
             return text;
         }

@@ -12,6 +12,21 @@ layer:
   label: "Claims"
   hidden-by-default: false
 
+# The texts on the map, plain text. A text left out keeps its English default.
+messages:
+  # A player's claim in BlueMap's marker list, and its popup's title when `owner` is none.
+  claim: "Claim"
+  # The popup's title (and the list's, with `owner: list`). Placeholders: <owner>
+  claim-of: "Claim of <owner>"
+  admin-claim: "Admin claim"
+  # The owner's name when GriefPrevention does not know it.
+  unknown-owner: "unknown"
+  # The popup's size line, for one claim and for several joined into one shape. Placeholders: <blocks>, <claims>
+  size: "<blocks> blocks"
+  size-several: "<claims> claims · <blocks> blocks"
+  # Between thousands in numbers: "," gives 12,345; "." gives 12.345; "" gives 12345.
+  thousands-separator: ","
+
 # Where the owner's name appears:
 #   click  only in the popup when someone clicks a claim
 #   list   also in BlueMap's marker list (BlueMap shows nothing on hover over an area)

@@ -5,12 +5,15 @@ import io.papermc.paper.registry.RegistryKey;
 import java.util.List;
 import java.util.function.Supplier;
 import me.fernandossm.bluemapbannermarkers.core.BannerDesign;
+import me.fernandossm.bluemapbannermarkers.core.Messages;
 import me.fernandossm.bluemapbannermarkers.core.Names;
 import me.fernandossm.bluemapbannermarkers.core.Settings;
 import me.fernandossm.bluemapbannermarkers.core.Waypoint;
 import me.fernandossm.bluemapbannermarkers.store.WaypointStore;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -76,23 +79,23 @@ public final class Waypoints {
         }
         String world = block.getWorld().getName();
         if (!settings.get().allows(world)) {
-            player.sendMessage(Component.text("Banners in this world cannot be waypoints.", NamedTextColor.RED));
+            tell(player, messages().worldNotAllowed());
             return false;
         }
         Waypoint existing = store.at(world, block.getX(), block.getY(), block.getZ()).orElse(null);
         if (existing != null && !existing.owner().equals(player.getUniqueId())) {
-            player.sendMessage(Component.text("This banner is " + existing.ownerName() + "'s waypoint, \"" + existing.name()
-                    + "\". Only " + existing.ownerName() + " can rename it.", NamedTextColor.RED));
+            tell(player, messages().notYours(), Placeholder.unparsed("owner", existing.ownerName()),
+                    Placeholder.unparsed("name", existing.name()));
             return false;
         }
         if (!builds.get().mayBuild(player, block)) {
-            player.sendMessage(Component.text("You need permission to build here to make this banner a waypoint.", NamedTextColor.RED));
+            tell(player, messages().noBuild());
             return false;
         }
         int maxLength = settings.get().maxNameLength();
         if (Names.length(name) > maxLength) {
-            player.sendMessage(Component.text("That name has " + Names.length(name) + " characters; waypoint names can have"
-                    + " at most " + maxLength + ". Rename the tag in an anvil.", NamedTextColor.RED));
+            tell(player, messages().nameTooLong(), Placeholder.unparsed("length", Integer.toString(Names.length(name))),
+                    Placeholder.unparsed("max", Integer.toString(maxLength)));
             return false;
         }
         if (existing != null) {
@@ -100,22 +103,48 @@ public final class Waypoints {
             store.update(renamed);
             displays.show(renamed);
             requestRedraw();
-            player.sendMessage(Component.text("Waypoint renamed to \"" + name + "\".", NamedTextColor.GREEN));
+            tell(player, messages().renamed(), Placeholder.unparsed("name", name));
             return true;
         }
         int max = settings.get().maxPerPlayer();
         int owned = store.ownedBy(player.getUniqueId()).size();
         if (owned >= max && !player.hasPermission(UNLIMITED)) {
-            player.sendMessage(Component.text("You have " + owned + " waypoints, the most allowed. Break one of your waypoint"
-                    + " banners to make a new one.", NamedTextColor.RED));
+            tell(player, messages().limitReached(), Placeholder.unparsed("count", Integer.toString(owned)),
+                    Placeholder.unparsed("max", Integer.toString(max)));
             return false;
         }
         Waypoint created = store.add(name, player.getUniqueId(), player.getName(), world, block.getX(), block.getY(), block.getZ(),
                 design(banner));
         displays.show(created);
         requestRedraw();
-        player.sendMessage(Component.text("Waypoint \"" + name + "\" added to the map.", NamedTextColor.GREEN));
+        tell(player, messages().added(), Placeholder.unparsed("name", name));
         return true;
+    }
+
+    private Messages messages() {
+        return settings.get().messages();
+    }
+
+    /** Sends a config.yml message; an empty one is not sent, and one MiniMessage cannot read is logged. */
+    private void tell(Player player, String template, TagResolver... placeholders) {
+        Component message = Waypoints.render(template, placeholders);
+        if (message != null) {
+            player.sendMessage(message);
+        } else if (!template.isBlank()) {
+            plugin.getLogger().warning("Cannot read the message '" + template + "' (MiniMessage)");
+        }
+    }
+
+    /** The message, or null when it is empty or MiniMessage cannot read it. */
+    static @Nullable Component render(String template, TagResolver... placeholders) {
+        if (template.isBlank()) {
+            return null;
+        }
+        try {
+            return MiniMessage.miniMessage().deserialize(template, placeholders);
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     /** Uses up one name tag from the hand, unless in creative. */

@@ -208,7 +208,7 @@ class BlueMapSinkTest {
     void theLayerFollowsTheConfig() {
         Settings d = Settings.DEFAULTS;
         Settings hidden = new Settings(d.worlds(), "Land", true, d.owner(), d.playerClaims(), d.adminClaims(),
-                d.adminColor(), d.fillOpacity(), d.lineOpacity(), d.lineWidth(), d.resyncInterval());
+                d.adminColor(), d.fillOpacity(), d.lineOpacity(), d.lineWidth(), d.resyncInterval(), d.messages());
         sink.enabled(api(overworld));
         sink.show(markers(aliceAt(1, 0)), Settings.DEFAULTS);
         sink.show(markers(aliceAt(1, 0)), hidden);

@@ -20,13 +20,14 @@ public record Settings(
         float fillOpacity,
         float lineOpacity,
         int lineWidth,
-        Duration resyncInterval) {
+        Duration resyncInterval,
+        Messages messages) {
 
     /** Where a claim's owner is named. */
     public enum OwnerShown { CLICK, LIST, NONE }
 
     public static final Settings DEFAULTS = new Settings(Set.of(), "Claims", false, OwnerShown.CLICK, true, true,
-            0xBF00FF, 0.2f, 0.8f, 2, Duration.ofMinutes(5));
+            0xBF00FF, 0.2f, 0.8f, 2, Duration.ofMinutes(5), Messages.DEFAULTS);
 
     private static final Pattern HEX = Pattern.compile("#?([0-9a-fA-F]{6})");
     private static final Pattern DURATION = Pattern.compile("(\\d+)([smh])");
@@ -80,7 +81,8 @@ public record Settings(
                 opacity(c, "colors.fill-opacity", DEFAULTS.fillOpacity, log),
                 opacity(c, "colors.line-opacity", DEFAULTS.lineOpacity, log),
                 lineWidth,
-                resync);
+                resync,
+                Messages.from(c));
     }
 
     private static float opacity(ConfigurationSection c, String key, float fallback, Logger log) {

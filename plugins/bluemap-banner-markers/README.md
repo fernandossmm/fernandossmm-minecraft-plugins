@@ -32,6 +32,7 @@ BlueMap needs `accept-download: true` in `plugins/BlueMap/core.conf`, as it does
 | `max-name-length` | `24` | The longest name a waypoint can have, in characters (at most 50, as in an anvil) |
 | `layer.label` | `Waypoints` | The layer's name in BlueMap's marker menu |
 | `layer.hidden-by-default` | `false` | Whether the layer starts switched off in the browser |
+| `messages.*` | English | What players read: the chat messages (MiniMessage, with placeholders such as `<name>` and `<owner>`) and the popup's "Placed by" line. The default `config.yml` lists them all; translate them there |
 
 ## Commands and permissions
 

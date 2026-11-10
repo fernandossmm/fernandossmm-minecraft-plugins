@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Logger;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
 class MarkersTest {
@@ -31,7 +33,7 @@ class MarkersTest {
     private static Settings with(Settings.OwnerShown owner) {
         Settings d = Settings.DEFAULTS;
         return new Settings(d.worlds(), d.layerLabel(), d.hiddenByDefault(), owner, d.playerClaims(), d.adminClaims(),
-                d.adminColor(), d.fillOpacity(), d.lineOpacity(), d.lineWidth(), d.resyncInterval());
+                d.adminColor(), d.fillOpacity(), d.lineOpacity(), d.lineWidth(), d.resyncInterval(), d.messages());
     }
 
     @Test
@@ -120,7 +122,7 @@ class MarkersTest {
     void filtersByKindAndWorld() {
         Settings d = Settings.DEFAULTS;
         Settings onlyAdmin = new Settings(Set.of("world"), d.layerLabel(), false, d.owner(), false, true,
-                d.adminColor(), d.fillOpacity(), d.lineOpacity(), d.lineWidth(), Duration.ofMinutes(5));
+                d.adminColor(), d.fillOpacity(), d.lineOpacity(), d.lineWidth(), Duration.ofMinutes(5), d.messages());
         List<ClaimView> claims = List.of(
                 claim(1, ALICE, "Alice", 0, 0, 10),
                 admin(2, 100, 100),
@@ -138,5 +140,30 @@ class MarkersTest {
         Map<String, Map<String, MarkerSpec>> first = Markers.of(claims, CLICK);
         Collections.shuffle(claims);
         assertEquals(first, Markers.of(claims, CLICK));
+    }
+
+    @Test
+    void theTextsAreTranslatable() {
+        YamlConfiguration c = new YamlConfiguration();
+        c.set("owner", "list");
+        c.set("messages.claim-of", "Terreno de <owner>");
+        c.set("messages.admin-claim", "Terreno de la administración");
+        c.set("messages.size", "<blocks> bloques");
+        c.set("messages.size-several", "<claims> terrenos · <blocks> bloques");
+        c.set("messages.thousands-separator", ".");
+        Settings es = Settings.from(c, Logger.getAnonymousLogger());
+
+        MarkerSpec one = Markers.of(List.of(claim(1, ALICE, "Alice", 0, 0, 40)), es).get("world").values().iterator().next();
+        assertEquals("Terreno de Alice", one.label());
+        assertEquals("<b>Terreno de Alice</b><br>1.600 bloques", one.detail());
+        MarkerSpec two = Markers.of(List.of(admin(2, 0, 0), admin(3, 10, 0)), es).get("world").values().iterator().next();
+        assertEquals("<b>Terreno de la administración</b><br>2 terrenos · 200 bloques", two.detail());
+    }
+
+    @Test
+    void aNameIsNeverReadAsAPlaceholder() {
+        assertEquals("Claim of <blocks>", Messages.fill("Claim of <owner>", Map.of("owner", "<blocks>", "blocks", "9")));
+        assertEquals("<unknown> 9", Messages.fill("<unknown> <blocks>", Map.of("blocks", "9")));
+        assertEquals("1,234,567", Messages.DEFAULTS.number(1_234_567));
     }
 }

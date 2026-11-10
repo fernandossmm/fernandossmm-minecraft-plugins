@@ -36,6 +36,7 @@ import me.fernandossm.bluemapbannermarkers.core.BannerImage;
 import me.fernandossm.bluemapbannermarkers.core.Settings;
 import me.fernandossm.bluemapbannermarkers.core.Waypoint;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -237,6 +238,16 @@ class BlueMapSinkTest {
         assertTrue(after.getDetail().contains("<img src=\"maps/test/assets/" + faceAsset + "\""), after.getDetail());
         assertTrue(after.getDetail().contains("Placed by Alice"));
         assertTrue(overworld.assets.get("world").assetExists(faceAsset));
+    }
+
+    @Test
+    void thePopupLineIsTranslatableAndATranslationRedrawsIt() {
+        sink.show(List.of(home(1)), Settings.DEFAULTS);
+        YamlConfiguration c = new YamlConfiguration();
+        c.set("messages.placed-by", "Colocado por <owner> <i>");
+        sink.show(List.of(home(1)), Settings.from(c, Logger.getAnonymousLogger()));
+        assertEquals("<div style=\"max-width:16em;overflow-wrap:anywhere\"><b>Home &lt;3</b><br>Colocado por Alice &lt;i&gt;</div>",
+                ((POIMarker) overworld.set(0).get("waypoint-7")).getDetail(), "a changed text replaces the marker; the template is escaped too");
     }
 
     @Test

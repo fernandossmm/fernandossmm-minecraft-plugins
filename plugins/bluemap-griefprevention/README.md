@@ -29,6 +29,7 @@ Put the jar in `plugins/` next to GriefPrevention and BlueMap, and start the ser
 | `layer.hidden-by-default` | `false` | Whether the layer starts switched off in the browser |
 | `owner` | `click` | Where the owner's name appears: `click` (popup only), `list` (also in BlueMap's marker list), `none` |
 | `claims.player` / `claims.admin` | `true` | Which kinds of claims are drawn |
+| `messages.*` | English | The texts on the map: "Claim", "Claim of NAME", "Admin claim", the size line and the thousands separator. The default `config.yml` lists them all; translate them there |
 | `colors.admin` | `#BF00FF` | The colour of admin claims |
 | `colors.fill-opacity` / `colors.line-opacity` | `0.2` / `0.8` | Opacity of the area and of its outline |
 | `colors.line-width` | `2` | Outline width, in pixels |

@@ -49,4 +49,21 @@ class NamesAndSettingsTest {
         assertFalse(s.allows("world_nether"));
         assertTrue(Settings.DEFAULTS.allows("anything"));
     }
+
+    @Test
+    void messagesComeFromTheConfigAndMissingOnesStayEnglish() {
+        YamlConfiguration c = new YamlConfiguration();
+        c.set("messages.added", "<green>Punto \"<name>\" añadido al mapa.");
+        Messages m = Settings.from(c, Logger.getAnonymousLogger()).messages();
+        assertEquals("<green>Punto \"<name>\" añadido al mapa.", m.added());
+        assertEquals(Messages.DEFAULTS.renamed(), m.renamed());
+        assertEquals(Messages.DEFAULTS, Settings.DEFAULTS.messages());
+    }
+
+    @Test
+    void thePlacedByLineEscapesTemplateAndOwner() {
+        assertEquals("Placed by &lt;b&gt;Eve&lt;/b&gt;", Messages.placedByHtml("Placed by <owner>", "<b>Eve</b>"));
+        assertEquals("&lt;owner&gt;", Messages.placedByHtml("<owner>", "<owner>"), "a name that looks like the placeholder stays as it is");
+        assertEquals("Nobody", Messages.placedByHtml("Nobody", "Alice"));
+    }
 }

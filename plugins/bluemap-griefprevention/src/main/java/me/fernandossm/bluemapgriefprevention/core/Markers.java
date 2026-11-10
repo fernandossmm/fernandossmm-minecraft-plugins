@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -55,13 +54,15 @@ public final class Markers {
     private static MarkerSpec spec(List<ClaimView> claims, Outline outline, Settings settings) {
         ClaimView first = claims.getFirst();
         boolean admin = first.admin();
-        String name = first.ownerName() == null || first.ownerName().isBlank() ? "unknown" : first.ownerName();
-        String title = admin ? "Admin claim" : settings.owner() == Settings.OwnerShown.NONE ? "Claim" : "Claim of " + name;
-        String label = admin ? "Admin claim" : settings.owner() == Settings.OwnerShown.LIST ? title : "Claim";
+        Messages text = settings.messages();
+        String name = first.ownerName() == null || first.ownerName().isBlank() ? text.unknownOwner() : first.ownerName();
+        String title = admin ? text.adminClaim() : settings.owner() == Settings.OwnerShown.NONE ? text.claim()
+                : Messages.fill(text.claimOf(), Map.of("owner", name));
+        String label = admin ? text.adminClaim() : settings.owner() == Settings.OwnerShown.LIST ? title : text.claim();
         long area = claims.stream().mapToLong(c -> c.area().area()).sum();
         String size = claims.size() == 1
-                ? String.format(Locale.ROOT, "%,d blocks", area)
-                : String.format(Locale.ROOT, "%d claims · %,d blocks", claims.size(), area);
+                ? Messages.fill(text.size(), Map.of("blocks", text.number(area)))
+                : Messages.fill(text.sizeSeveral(), Map.of("claims", text.number(claims.size()), "blocks", text.number(area)));
         String detail = "<b>" + escape(title) + "</b><br>" + escape(size);
         int y = claims.stream().mapToInt(ClaimView::surfaceY).max().orElse(64);
         int color = admin ? settings.adminColor() : LocatorColor.of(first.owner());
