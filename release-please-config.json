@@ -24,6 +24,9 @@
     },
     "plugins/bluemap-skinsrestorer-heads": {
       "component": "bluemap-skinsrestorer-heads"
+    },
+    "plugins/axgraves-owner-grace": {
+      "component": "axgraves-owner-grace"
     }
   }
 }

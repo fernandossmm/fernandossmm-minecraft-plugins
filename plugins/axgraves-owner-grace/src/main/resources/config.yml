@@ -1,0 +1,14 @@
+# AxGraves Owner Grace
+#
+# For a while after a player dies, only they can open their grave; after that, anyone can. It needs
+# `interact-only-own: false` in AxGraves' config.yml: with it on, AxGraves keeps every grave its owner's for good
+# and this plugin has nothing to open.
+
+# How long a grave stays its owner's: a number followed by s, m or h. 0 opens graves to everyone at once.
+# Counted from the death in real time, also across restarts, as AxGraves keeps each grave's time of death.
+grace-period: 5m
+
+# What players read, in MiniMessage (https://docs.papermc.io/adventure/minimessage/). An empty message is not sent.
+messages:
+  # Someone else's grave, still within the grace period. Placeholders: <owner>, <time> (minutes:seconds left)
+  locked: "<red>This is <owner>'s grave. You can open it in <time>."

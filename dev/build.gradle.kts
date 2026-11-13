@@ -40,6 +40,7 @@ tasks.runServer {
         url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7
         url("https://cdn.modrinth.com/data/swbUV1cr/versions/uHQIrUdf/bluemap-5.29-paper.jar") // for bluemap-griefprevention
         url("https://cdn.modrinth.com/data/TsLS8Py5/versions/ziIzW16f/SkinsRestorer.jar") // 15.12.6, for bluemap-banner-markers and bluemap-skinsrestorer-heads
+        url("https://cdn.modrinth.com/data/Cz6msz34/versions/MdUKntqn/AxGraves-1.32.2.jar") // 1.32.2, for axgraves-owner-grace
     }
 }
 
@@ -54,6 +55,7 @@ tasks.register<RunServer>("runE2eServer") {
         url("https://cdn.modrinth.com/data/O4o4mKaq/versions/dGfCZHqk/GriefPrevention.jar") // 16.18.7
         url("https://cdn.modrinth.com/data/swbUV1cr/versions/uHQIrUdf/bluemap-5.29-paper.jar") // 5.29
         url("https://cdn.modrinth.com/data/TsLS8Py5/versions/ziIzW16f/SkinsRestorer.jar") // 15.12.6, offline-mode skins
+        url("https://cdn.modrinth.com/data/Cz6msz34/versions/MdUKntqn/AxGraves-1.32.2.jar") // 1.32.2
     }
 }
 

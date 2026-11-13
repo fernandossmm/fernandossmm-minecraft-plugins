@@ -11,6 +11,7 @@ Small Paper plugins that fill gaps with no current public solution. Each one is 
 | [BlueMap Banner Markers](plugins/bluemap-banner-markers)           | A name tag on a banner makes a waypoint on Bluemap, showing the banner pattern                                | 26.3           |
 | [BlueMap SkinsRestorer Heads](plugins/bluemap-skinsrestorer-heads) | BlueMap's player heads show the skin each player has in game, such as SkinsRestorer's on offline-mode servers | 26.3           |
 | [DiscordSRV fail-closed](plugins/discordsrv-fail-closed)           | Refuses every login while DiscordSRV is down, so its Discord account check can't fail open                    | 26.3           |
+| [AxGraves Owner Grace](plugins/axgraves-owner-grace)               | AxGraves graves stay their owner's for a few minutes, then anyone can open them                               | 26.3 |
 
 ## Supported versions
 

@@ -1,0 +1,17 @@
+name: AxGravesOwnerGrace
+version: "${version}"
+main: me.fernandossm.axgravesownergrace.AxGravesOwnerGrace
+api-version: "${apiVersion}"
+description: "${description}"
+authors: [fernandossmm]
+website: "${website}"
+dependencies:
+  server:
+    AxGraves:
+      load: BEFORE
+      required: true
+      join-classpath: true
+permissions:
+  axgravesownergrace.bypass:
+    description: Open any grave at once, as its owner can.
+    default: op
